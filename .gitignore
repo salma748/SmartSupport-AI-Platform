@@ -1,0 +1,99 @@
+# ==============================
+# Visual Studio / IDE
+# ==============================
+.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+*.rsuser
+*.sln.ide/
+.idea/
+
+# ==============================
+# .NET build artifacts
+# ==============================
+bin/
+obj/
+out/
+artifacts/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+build/
+bld/
+*.dll
+*.exe
+*.pdb
+*.cache
+*.tlog
+*.vspscc
+*.vssscc
+*.nupkg.metadata
+
+# ==============================
+# Testing
+# ==============================
+TestResults/
+[Tt]est[Rr]esult*/
+*.trx
+*.coverage
+*.coveragexml
+coverage*.json
+coverage*.xml
+coverage*.info
+
+# ==============================
+# NuGet
+# ==============================
+*.nupkg
+*.snupkg
+
+# ==============================
+# Logs and temporary files
+# ==============================
+*.log
+*.tmp
+*.bak
+*.orig
+*.rej
+*.swp
+*.swo
+*~
+
+# ==============================
+# Secrets and local configuration
+# ==============================
+.env
+.env.*
+!.env.example
+secrets.json
+*.secrets.json
+appsettings.*.local.json
+appsettings.Local.json
+*.pfx
+*.p12
+
+# ==============================
+# OS-generated files
+# ==============================
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+._*
+
+# ==============================
+# Publish / deployment output
+# ==============================
+publish/
+PublishScripts/
+*.publishproj
+*.pubxml
+*.pubxml.user
+*.azurePubxml
+*.publishsettings
+*.[Pp]ublish.xml
+

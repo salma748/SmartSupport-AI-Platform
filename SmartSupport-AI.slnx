@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="src/SmartSupport-AI.BLL/SmartSupport-AI.BLL.csproj" />
+  <Project Path="src/SmartSupport-AI.DAL/SmartSupport-AI.DAL.csproj" />
+  <Project Path="src/SmartSupport-AI.PL/SmartSupport-AI.PL.csproj" />
+</Solution>
