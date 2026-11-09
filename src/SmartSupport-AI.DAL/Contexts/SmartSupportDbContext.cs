@@ -20,5 +20,16 @@ namespace SmartSupport_AI.DAL.Contexts
         public DbSet<ToolExecution> ToolExecutions { get; set; } = null!;
         public DbSet<ArticleCategory> ArticleCategories { get; set; } = null!;
         public DbSet<KnowledgeArticle> KnowledgeArticles { get; set; } = null!;
+        public DbSet<ResponseArticle> ResponseArticles { get; set; } = null!;
+        public DbSet<SystemPolicy> SystemPolicies { get; set; } = null!;
+        public DbSet<PerformanceMetric> PerformanceMetrics { get; set; } = null!;
+        public DbSet<SupportTicket> SupportTickets { get; set; } = null!;
+        public DbSet<TicketAssignment> TicketAssignments { get; set; } = null!;
+        public DbSet<TicketStatusHistory> TicketStatusHistories { get; set; } = null!;
+        public DbSet<InternalNote> InternalNotes { get; set; } = null!;
+        public DbSet<Order> Orders { get; set; } = null!;
+        public DbSet<OrderStatusCheck> OrderStatusChecks { get; set; } = null!;
+        public DbSet<RefundRequest> RefundRequests { get; set; } = null!;
+        public DbSet<RefundStatusHistory> RefundStatusHistories { get; set; } = null!;
     }
 }
