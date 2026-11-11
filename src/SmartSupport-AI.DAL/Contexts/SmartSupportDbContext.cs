@@ -5,6 +5,8 @@ namespace SmartSupport_AI.DAL.Contexts
 {
     public class SmartSupportDbContext : DbContext
     {
+        public SmartSupportDbContext(DbContextOptions<SmartSupportDbContext> options) : base(options) { }
+
         public DbSet<User> Users { get; set; } = null!;
         public DbSet<Customer> Customers { get; set; } = null!;
         public DbSet<SupportAgent> SupportAgents { get; set; } = null!;
@@ -31,5 +33,19 @@ namespace SmartSupport_AI.DAL.Contexts
         public DbSet<OrderStatusCheck> OrderStatusChecks { get; set; } = null!;
         public DbSet<RefundRequest> RefundRequests { get; set; } = null!;
         public DbSet<RefundStatusHistory> RefundStatusHistories { get; set; } = null!;
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.ApplyConfigurationsFromAssembly(
+                typeof(SmartSupportDbContext).Assembly
+            );
+        }
     }
 }

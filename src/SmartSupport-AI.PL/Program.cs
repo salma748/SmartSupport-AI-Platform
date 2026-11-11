@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using SmartSupport_AI.DAL.Contexts;
+
 namespace SmartSupport_AI.PL
 {
     public class Program
@@ -5,6 +8,12 @@ namespace SmartSupport_AI.PL
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+                ?? throw new InvalidOperationException("Connection string 'DefaultConnection' was not found.");
+
+            builder.Services.AddDbContext<SmartSupportDbContext>(options =>
+                options.UseSqlServer(connectionString));
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();

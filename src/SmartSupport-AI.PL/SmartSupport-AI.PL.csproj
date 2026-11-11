@@ -5,10 +5,19 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>SmartSupport_AI.PL</RootNamespace>
+    <UserSecretsId>c3fe78e5-654c-471e-86d6-23a609fa84d2</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.14">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\SmartSupport-AI.BLL\SmartSupport-AI.BLL.csproj" />
+    <ProjectReference Include="..\SmartSupport-AI.DAL\SmartSupport-AI.DAL.csproj" />
   </ItemGroup>
 
 </Project>
