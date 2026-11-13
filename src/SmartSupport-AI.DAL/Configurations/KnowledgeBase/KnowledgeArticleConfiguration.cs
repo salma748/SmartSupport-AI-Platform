@@ -9,6 +9,19 @@ namespace SmartSupport_AI.DAL.Configurations
         public void Configure(EntityTypeBuilder<KnowledgeArticle> builder)
         {
             builder.HasKey(e => e.ArticleId);
+
+            builder.Property(e => e.Title).IsRequired();
+
+            builder.Property(e => e.Content).IsRequired();
+
+            builder.Property(e => e.Status).IsRequired();
+
+            builder.Property(e => e.UpdatedAt).IsRequired();
+
+            builder.HasMany<ResponseArticle>()
+                .WithOne()
+                .HasForeignKey(e => e.ArticleId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

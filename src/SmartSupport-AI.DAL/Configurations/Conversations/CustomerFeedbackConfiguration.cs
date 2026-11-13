@@ -9,6 +9,13 @@ namespace SmartSupport_AI.DAL.Configurations
         public void Configure(EntityTypeBuilder<CustomerFeedback> builder)
         {
             builder.HasKey(e => e.FeedbackId);
+
+            builder.Property(e => e.Comment).IsRequired(false);
+
+            builder.ToTable(t => t.HasCheckConstraint(
+                "CK_CustomerFeedback_Rating",
+                "[Rating] >= 1 AND [Rating] <= 5"
+            ));
         }
     }
 }

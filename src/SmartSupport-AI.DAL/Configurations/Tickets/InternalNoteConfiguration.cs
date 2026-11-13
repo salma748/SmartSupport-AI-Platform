@@ -9,6 +9,10 @@ namespace SmartSupport_AI.DAL.Configurations
         public void Configure(EntityTypeBuilder<InternalNote> builder)
         {
             builder.HasKey(e => e.NoteId);
+
+            builder.Property(e => e.Content).IsRequired();
+
+            builder.Property(e => e.CreatedAt).IsRequired();
         }
     }
 }

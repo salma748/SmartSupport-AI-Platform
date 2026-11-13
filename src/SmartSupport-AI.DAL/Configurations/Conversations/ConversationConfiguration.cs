@@ -9,6 +9,43 @@ namespace SmartSupport_AI.DAL.Configurations
         public void Configure(EntityTypeBuilder<Conversation> builder)
         {
             builder.HasKey(e => e.ConversationId);
+
+            builder.Property(e => e.Channel).IsRequired();
+
+            builder.Property(e => e.Status).IsRequired();
+
+            builder.Property(e => e.ResolutionType).IsRequired(false);
+
+            builder.Property(e => e.Summary).IsRequired(false);
+
+            builder.Property(e => e.StartedAt).IsRequired();
+
+            builder.Property(e => e.EndedAt).IsRequired(false);
+
+            builder.HasMany<Message>()
+                .WithOne()
+                .HasForeignKey(e => e.ConversationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany<CustomerFeedback>()
+                .WithOne()
+                .HasForeignKey(e => e.ConversationId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany<SupportTicket>()
+                .WithOne()
+                .HasForeignKey(e => e.ConversationId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasMany<OrderStatusCheck>()
+                .WithOne()
+                .HasForeignKey(e => e.ConversationId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasMany<RefundRequest>()
+                .WithOne()
+                .HasForeignKey(e => e.ConversationId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

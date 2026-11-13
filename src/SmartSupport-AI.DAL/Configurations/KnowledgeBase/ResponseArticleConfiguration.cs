@@ -9,6 +9,8 @@ namespace SmartSupport_AI.DAL.Configurations
         public void Configure(EntityTypeBuilder<ResponseArticle> builder)
         {
             builder.HasKey(e => new { e.ResponseId, e.ArticleId });
+
+            builder.Property(e => e.RelevanceScore).HasPrecision(18, 2);
         }
     }
 }

@@ -9,6 +9,8 @@ namespace SmartSupport_AI.DAL.Configurations
         public void Configure(EntityTypeBuilder<TicketAssignment> builder)
         {
             builder.HasKey(e => e.AssignmentId);
+
+            builder.Property(e => e.AssignedAt).IsRequired();
         }
     }
 }

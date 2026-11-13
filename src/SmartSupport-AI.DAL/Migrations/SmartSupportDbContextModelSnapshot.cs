@@ -40,6 +40,7 @@ namespace SmartSupport_AI.DAL.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("MinConfidence")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("ModelName")
@@ -48,9 +49,15 @@ namespace SmartSupport_AI.DAL.Migrations
 
                     b.Property<string>("VersionNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("ConfigId");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("VersionNumber")
+                        .IsUnique();
 
                     b.ToTable("AIConfigurations");
                 });
@@ -64,6 +71,7 @@ namespace SmartSupport_AI.DAL.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ResponseId"));
 
                     b.Property<decimal>("Confidence")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("ConfigId")
@@ -85,6 +93,15 @@ namespace SmartSupport_AI.DAL.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ResponseId");
+
+                    b.HasIndex("ConfigId");
+
+                    b.HasIndex("IntentId");
+
+                    b.HasIndex("MessageId")
+                        .IsUnique();
+
+                    b.HasIndex("TriggerMsgId");
 
                     b.ToTable("AIResponses");
                 });
@@ -118,6 +135,12 @@ namespace SmartSupport_AI.DAL.Migrations
 
                     b.HasKey("LogId");
 
+                    b.HasIndex("ConversationId");
+
+                    b.HasIndex("TicketId");
+
+                    b.HasIndex("UserId");
+
                     b.ToTable("ActionLogs");
                 });
 
@@ -138,6 +161,9 @@ namespace SmartSupport_AI.DAL.Migrations
 
                     b.HasKey("AdminId");
 
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
                     b.ToTable("Administrators");
                 });
 
@@ -154,9 +180,13 @@ namespace SmartSupport_AI.DAL.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("CategoryId");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("ArticleCategories");
                 });
@@ -194,7 +224,16 @@ namespace SmartSupport_AI.DAL.Migrations
 
                     b.HasKey("AttachmentId");
 
-                    b.ToTable("Attachments");
+                    b.HasIndex("MessageId");
+
+                    b.HasIndex("TicketId");
+
+                    b.HasIndex("UploadedBy");
+
+                    b.ToTable("Attachments", t =>
+                        {
+                            t.HasCheckConstraint("CK_Attachment_MessageOrTicket", "[MessageId] IS NOT NULL OR [TicketId] IS NOT NULL");
+                        });
                 });
 
             modelBuilder.Entity("SmartSupport_AI.DAL.Entites.Conversation", b =>
@@ -233,6 +272,10 @@ namespace SmartSupport_AI.DAL.Migrations
 
                     b.HasKey("ConversationId");
 
+                    b.HasIndex("ConfigId");
+
+                    b.HasIndex("CustomerId");
+
                     b.ToTable("Conversations");
                 });
 
@@ -255,6 +298,9 @@ namespace SmartSupport_AI.DAL.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("CustomerId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Customers");
                 });
@@ -287,7 +333,16 @@ namespace SmartSupport_AI.DAL.Migrations
 
                     b.HasKey("FeedbackId");
 
-                    b.ToTable("CustomerFeedbacks");
+                    b.HasIndex("ConversationId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("ResponseId");
+
+                    b.ToTable("CustomerFeedbacks", t =>
+                        {
+                            t.HasCheckConstraint("CK_CustomerFeedback_Rating", "[Rating] >= 1 AND [Rating] <= 5");
+                        });
                 });
 
             modelBuilder.Entity("SmartSupport_AI.DAL.Entites.Intent", b =>
@@ -303,9 +358,13 @@ namespace SmartSupport_AI.DAL.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.HasKey("IntentId");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Intents");
                 });
@@ -332,6 +391,10 @@ namespace SmartSupport_AI.DAL.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("NoteId");
+
+                    b.HasIndex("AgentId");
+
+                    b.HasIndex("TicketId");
 
                     b.ToTable("InternalNotes");
                 });
@@ -366,6 +429,10 @@ namespace SmartSupport_AI.DAL.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("ArticleId");
+
+                    b.HasIndex("CategoryId");
+
+                    b.HasIndex("CreatedBy");
 
                     b.ToTable("KnowledgeArticles");
                 });
@@ -403,6 +470,13 @@ namespace SmartSupport_AI.DAL.Migrations
 
                     b.HasKey("MessageId");
 
+                    b.HasIndex("AgentId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("ConversationId", "SequenceNo")
+                        .IsUnique();
+
                     b.ToTable("Messages");
                 });
 
@@ -419,7 +493,8 @@ namespace SmartSupport_AI.DAL.Migrations
 
                     b.Property<string>("OrderNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("OrderStatus")
                         .IsRequired()
@@ -429,9 +504,15 @@ namespace SmartSupport_AI.DAL.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<decimal>("TotalAmount")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("OrderId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("OrderNumber")
+                        .IsUnique();
 
                     b.ToTable("Orders");
                 });
@@ -462,6 +543,12 @@ namespace SmartSupport_AI.DAL.Migrations
 
                     b.HasKey("CheckId");
 
+                    b.HasIndex("ConversationId");
+
+                    b.HasIndex("ExecutionId");
+
+                    b.HasIndex("OrderId");
+
                     b.ToTable("OrderStatusChecks");
                 });
 
@@ -484,6 +571,7 @@ namespace SmartSupport_AI.DAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("MetricValue")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("PeriodEnd")
@@ -493,6 +581,10 @@ namespace SmartSupport_AI.DAL.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("MetricId");
+
+                    b.HasIndex("AgentId");
+
+                    b.HasIndex("ConfigId");
 
                     b.ToTable("PerformanceMetrics");
                 });
@@ -506,6 +598,7 @@ namespace SmartSupport_AI.DAL.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RefundId"));
 
                     b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("ConversationId")
@@ -534,6 +627,12 @@ namespace SmartSupport_AI.DAL.Migrations
 
                     b.HasKey("RefundId");
 
+                    b.HasIndex("ConversationId");
+
+                    b.HasIndex("ExecutionId");
+
+                    b.HasIndex("OrderId");
+
                     b.ToTable("RefundRequests");
                 });
 
@@ -561,6 +660,8 @@ namespace SmartSupport_AI.DAL.Migrations
 
                     b.HasKey("HistoryId");
 
+                    b.HasIndex("RefundId");
+
                     b.ToTable("RefundStatusHistories");
                 });
 
@@ -576,12 +677,15 @@ namespace SmartSupport_AI.DAL.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("RelevanceScore")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("WasUsed")
                         .HasColumnType("bit");
 
                     b.HasKey("ResponseId", "ArticleId");
+
+                    b.HasIndex("ArticleId");
 
                     b.ToTable("ResponseArticles");
                 });
@@ -610,6 +714,9 @@ namespace SmartSupport_AI.DAL.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("AgentId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("SupportAgents");
                 });
@@ -647,6 +754,10 @@ namespace SmartSupport_AI.DAL.Migrations
 
                     b.HasKey("TicketId");
 
+                    b.HasIndex("ConversationId");
+
+                    b.HasIndex("CustomerId");
+
                     b.ToTable("SupportTickets");
                 });
 
@@ -660,7 +771,8 @@ namespace SmartSupport_AI.DAL.Migrations
 
                     b.Property<string>("PolicyName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("PolicyValue")
                         .IsRequired()
@@ -673,6 +785,11 @@ namespace SmartSupport_AI.DAL.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("PolicyId");
+
+                    b.HasIndex("PolicyName")
+                        .IsUnique();
+
+                    b.HasIndex("UpdatedBy");
 
                     b.ToTable("SystemPolicies");
                 });
@@ -698,6 +815,10 @@ namespace SmartSupport_AI.DAL.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("AssignmentId");
+
+                    b.HasIndex("AgentId");
+
+                    b.HasIndex("TicketId");
 
                     b.ToTable("TicketAssignments");
                 });
@@ -728,6 +849,10 @@ namespace SmartSupport_AI.DAL.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("HistoryId");
+
+                    b.HasIndex("ChangedBy");
+
+                    b.HasIndex("TicketId");
 
                     b.ToTable("TicketStatusHistories");
                 });
@@ -764,6 +889,8 @@ namespace SmartSupport_AI.DAL.Migrations
 
                     b.HasKey("ExecutionId");
 
+                    b.HasIndex("ResponseId");
+
                     b.ToTable("ToolExecutions");
                 });
 
@@ -780,7 +907,8 @@ namespace SmartSupport_AI.DAL.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("FullName")
                         .IsRequired()
@@ -803,7 +931,343 @@ namespace SmartSupport_AI.DAL.Migrations
 
                     b.HasKey("UserId");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.AIConfiguration", b =>
+                {
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Administrator", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.AIResponse", b =>
+                {
+                    b.HasOne("SmartSupport_AI.DAL.Entites.AIConfiguration", null)
+                        .WithMany()
+                        .HasForeignKey("ConfigId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Intent", null)
+                        .WithMany()
+                        .HasForeignKey("IntentId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Message", null)
+                        .WithOne()
+                        .HasForeignKey("SmartSupport_AI.DAL.Entites.AIResponse", "MessageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Message", null)
+                        .WithMany()
+                        .HasForeignKey("TriggerMsgId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.ActionLog", b =>
+                {
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Conversation", null)
+                        .WithMany()
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("SmartSupport_AI.DAL.Entites.SupportTicket", null)
+                        .WithMany()
+                        .HasForeignKey("TicketId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("SmartSupport_AI.DAL.Entites.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction);
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.Administrator", b =>
+                {
+                    b.HasOne("SmartSupport_AI.DAL.Entites.User", null)
+                        .WithOne()
+                        .HasForeignKey("SmartSupport_AI.DAL.Entites.Administrator", "UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.Attachment", b =>
+                {
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Message", null)
+                        .WithMany()
+                        .HasForeignKey("MessageId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("SmartSupport_AI.DAL.Entites.SupportTicket", null)
+                        .WithMany()
+                        .HasForeignKey("TicketId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("SmartSupport_AI.DAL.Entites.User", null)
+                        .WithMany()
+                        .HasForeignKey("UploadedBy")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.Conversation", b =>
+                {
+                    b.HasOne("SmartSupport_AI.DAL.Entites.AIConfiguration", null)
+                        .WithMany()
+                        .HasForeignKey("ConfigId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Customer", null)
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.Customer", b =>
+                {
+                    b.HasOne("SmartSupport_AI.DAL.Entites.User", null)
+                        .WithOne()
+                        .HasForeignKey("SmartSupport_AI.DAL.Entites.Customer", "UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.CustomerFeedback", b =>
+                {
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Conversation", null)
+                        .WithMany()
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Customer", null)
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("SmartSupport_AI.DAL.Entites.AIResponse", null)
+                        .WithMany()
+                        .HasForeignKey("ResponseId")
+                        .OnDelete(DeleteBehavior.NoAction);
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.InternalNote", b =>
+                {
+                    b.HasOne("SmartSupport_AI.DAL.Entites.SupportAgent", null)
+                        .WithMany()
+                        .HasForeignKey("AgentId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("SmartSupport_AI.DAL.Entites.SupportTicket", null)
+                        .WithMany()
+                        .HasForeignKey("TicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.KnowledgeArticle", b =>
+                {
+                    b.HasOne("SmartSupport_AI.DAL.Entites.ArticleCategory", null)
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Administrator", null)
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.Message", b =>
+                {
+                    b.HasOne("SmartSupport_AI.DAL.Entites.SupportAgent", null)
+                        .WithMany()
+                        .HasForeignKey("AgentId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Conversation", null)
+                        .WithMany()
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Customer", null)
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.NoAction);
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.Order", b =>
+                {
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Customer", null)
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.OrderStatusCheck", b =>
+                {
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Conversation", null)
+                        .WithMany()
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("SmartSupport_AI.DAL.Entites.ToolExecution", null)
+                        .WithMany()
+                        .HasForeignKey("ExecutionId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Order", null)
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.PerformanceMetric", b =>
+                {
+                    b.HasOne("SmartSupport_AI.DAL.Entites.SupportAgent", null)
+                        .WithMany()
+                        .HasForeignKey("AgentId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("SmartSupport_AI.DAL.Entites.AIConfiguration", null)
+                        .WithMany()
+                        .HasForeignKey("ConfigId")
+                        .OnDelete(DeleteBehavior.SetNull);
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.RefundRequest", b =>
+                {
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Conversation", null)
+                        .WithMany()
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("SmartSupport_AI.DAL.Entites.ToolExecution", null)
+                        .WithMany()
+                        .HasForeignKey("ExecutionId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Order", null)
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.RefundStatusHistory", b =>
+                {
+                    b.HasOne("SmartSupport_AI.DAL.Entites.RefundRequest", null)
+                        .WithMany()
+                        .HasForeignKey("RefundId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.ResponseArticle", b =>
+                {
+                    b.HasOne("SmartSupport_AI.DAL.Entites.KnowledgeArticle", null)
+                        .WithMany()
+                        .HasForeignKey("ArticleId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("SmartSupport_AI.DAL.Entites.AIResponse", null)
+                        .WithMany()
+                        .HasForeignKey("ResponseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.SupportAgent", b =>
+                {
+                    b.HasOne("SmartSupport_AI.DAL.Entites.User", null)
+                        .WithOne()
+                        .HasForeignKey("SmartSupport_AI.DAL.Entites.SupportAgent", "UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.SupportTicket", b =>
+                {
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Conversation", null)
+                        .WithMany()
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Customer", null)
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.SystemPolicy", b =>
+                {
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Administrator", null)
+                        .WithMany()
+                        .HasForeignKey("UpdatedBy")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.TicketAssignment", b =>
+                {
+                    b.HasOne("SmartSupport_AI.DAL.Entites.SupportAgent", null)
+                        .WithMany()
+                        .HasForeignKey("AgentId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("SmartSupport_AI.DAL.Entites.SupportTicket", null)
+                        .WithMany()
+                        .HasForeignKey("TicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.TicketStatusHistory", b =>
+                {
+                    b.HasOne("SmartSupport_AI.DAL.Entites.User", null)
+                        .WithMany()
+                        .HasForeignKey("ChangedBy")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("SmartSupport_AI.DAL.Entites.SupportTicket", null)
+                        .WithMany()
+                        .HasForeignKey("TicketId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.ToolExecution", b =>
+                {
+                    b.HasOne("SmartSupport_AI.DAL.Entites.AIResponse", null)
+                        .WithMany()
+                        .HasForeignKey("ResponseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }
