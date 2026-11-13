@@ -21,5 +21,13 @@ namespace SmartSupport_AI.DAL.Entites
         public string Status { get; set; } = string.Empty;
 
         public DateTime InitiatedAt { get; set; }
+
+        public Conversation Conversation { get; set; } = null!;
+
+        public ToolExecution? ToolExecution { get; set; }
+
+        public Order Order { get; set; } = null!;
+
+        public ICollection<RefundStatusHistory> StatusHistory { get; set; } = new List<RefundStatusHistory>();
     }
 }

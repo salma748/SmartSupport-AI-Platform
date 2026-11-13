@@ -16,17 +16,17 @@ namespace SmartSupport_AI.DAL.Configurations
 
             builder.Property(e => e.CreatedAt).IsRequired();
 
-            builder.HasOne<User>()
+            builder.HasOne(e => e.User)
                 .WithMany()
                 .HasForeignKey(e => e.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasOne<Conversation>()
+            builder.HasOne(e => e.Conversation)
                 .WithMany()
                 .HasForeignKey(e => e.ConversationId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasOne<SupportTicket>()
+            builder.HasOne(e => e.Ticket)
                 .WithMany()
                 .HasForeignKey(e => e.TicketId)
                 .OnDelete(DeleteBehavior.NoAction);

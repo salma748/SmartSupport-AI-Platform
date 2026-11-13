@@ -18,8 +18,8 @@ namespace SmartSupport_AI.DAL.Configurations
 
             builder.Property(e => e.Description).IsRequired(false);
 
-            builder.HasMany<KnowledgeArticle>()
-                .WithOne()
+            builder.HasMany(e => e.Articles)
+                .WithOne(e => e.Category)
                 .HasForeignKey(e => e.CategoryId)
                 .OnDelete(DeleteBehavior.NoAction);
         }

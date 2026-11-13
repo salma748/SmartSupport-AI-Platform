@@ -15,5 +15,11 @@ namespace SmartSupport_AI.DAL.Entites
         public decimal TotalAmount { get; set; }
 
         public DateTime PlacedAt { get; set; }
+
+        public Customer Customer { get; set; } = null!;
+
+        public ICollection<OrderStatusCheck> StatusChecks { get; set; } = new List<OrderStatusCheck>();
+
+        public ICollection<RefundRequest> RefundRequests { get; set; } = new List<RefundRequest>();
     }
 }

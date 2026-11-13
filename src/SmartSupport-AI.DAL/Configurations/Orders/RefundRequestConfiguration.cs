@@ -20,10 +20,10 @@ namespace SmartSupport_AI.DAL.Configurations
 
             builder.Property(e => e.InitiatedAt).IsRequired();
 
-            builder.HasMany<RefundStatusHistory>()
-                .WithOne()
+            builder.HasMany(e => e.StatusHistory)
+                .WithOne(e => e.RefundRequest)
                 .HasForeignKey(e => e.RefundId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

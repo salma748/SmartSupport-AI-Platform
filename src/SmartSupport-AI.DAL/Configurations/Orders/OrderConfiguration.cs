@@ -22,15 +22,15 @@ namespace SmartSupport_AI.DAL.Configurations
 
             builder.Property(e => e.PlacedAt).IsRequired();
 
-            builder.HasMany<OrderStatusCheck>()
-                .WithOne()
+            builder.HasMany(e => e.StatusChecks)
+                .WithOne(e => e.Order)
                 .HasForeignKey(e => e.OrderId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany<RefundRequest>()
-                .WithOne()
+            builder.HasMany(e => e.RefundRequests)
+                .WithOne(e => e.Order)
                 .HasForeignKey(e => e.OrderId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

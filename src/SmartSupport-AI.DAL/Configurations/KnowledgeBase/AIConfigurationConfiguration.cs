@@ -23,17 +23,17 @@ namespace SmartSupport_AI.DAL.Configurations
             builder.Property(e => e.CreatedAt).IsRequired();
 
             builder.HasMany<Conversation>()
-                .WithOne()
+                .WithOne(e => e.Configuration)
                 .HasForeignKey(e => e.ConfigId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasMany<AIResponse>()
-                .WithOne()
+                .WithOne(e => e.Configuration)
                 .HasForeignKey(e => e.ConfigId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasMany<PerformanceMetric>()
-                .WithOne()
+                .WithOne(e => e.Configuration)
                 .HasForeignKey(e => e.ConfigId)
                 .OnDelete(DeleteBehavior.SetNull);
         }

@@ -15,5 +15,11 @@ namespace SmartSupport_AI.DAL.Entites
         public string StatusReturned { get; set; } = string.Empty;
 
         public DateTime CheckedAt { get; set; }
+
+        public Conversation Conversation { get; set; } = null!;
+
+        public ToolExecution? ToolExecution { get; set; }
+
+        public Order Order { get; set; } = null!;
     }
 }

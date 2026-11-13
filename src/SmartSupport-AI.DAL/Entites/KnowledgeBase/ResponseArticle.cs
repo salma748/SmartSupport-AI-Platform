@@ -11,5 +11,9 @@ namespace SmartSupport_AI.DAL.Entites
         public int RankPosition { get; set; }
 
         public bool WasUsed { get; set; }
+
+        public AIResponse Response { get; set; } = null!;
+
+        public KnowledgeArticle Article { get; set; } = null!;
     }
 }

@@ -17,5 +17,9 @@ namespace SmartSupport_AI.DAL.Entites
         public DateTime PeriodStart { get; set; }
 
         public DateTime PeriodEnd { get; set; }
+
+        public AIConfiguration? Configuration { get; set; }
+
+        public SupportAgent? Agent { get; set; }
     }
 }

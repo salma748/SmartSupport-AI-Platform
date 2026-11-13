@@ -20,23 +20,23 @@ namespace SmartSupport_AI.DAL.Configurations
 
             builder.Property(e => e.CreatedAt).IsRequired();
 
-            builder.HasMany<TicketAssignment>()
-                .WithOne()
+            builder.HasMany(e => e.Assignments)
+                .WithOne(e => e.Ticket)
+                .HasForeignKey(e => e.TicketId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasMany(e => e.StatusHistory)
+                .WithOne(e => e.Ticket)
+                .HasForeignKey(e => e.TicketId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasMany(e => e.InternalNotes)
+                .WithOne(e => e.Ticket)
                 .HasForeignKey(e => e.TicketId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany<TicketStatusHistory>()
-                .WithOne()
-                .HasForeignKey(e => e.TicketId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasMany<InternalNote>()
-                .WithOne()
-                .HasForeignKey(e => e.TicketId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            builder.HasMany<Attachment>()
-                .WithOne()
+            builder.HasMany(e => e.Attachments)
+                .WithOne(e => e.Ticket)
                 .HasForeignKey(e => e.TicketId)
                 .OnDelete(DeleteBehavior.NoAction);
         }

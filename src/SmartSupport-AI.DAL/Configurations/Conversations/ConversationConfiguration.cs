@@ -22,28 +22,28 @@ namespace SmartSupport_AI.DAL.Configurations
 
             builder.Property(e => e.EndedAt).IsRequired(false);
 
-            builder.HasMany<Message>()
-                .WithOne()
+            builder.HasMany(e => e.Messages)
+                .WithOne(e => e.Conversation)
                 .HasForeignKey(e => e.ConversationId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany<CustomerFeedback>()
-                .WithOne()
+            builder.HasMany(e => e.Feedback)
+                .WithOne(e => e.Conversation)
                 .HasForeignKey(e => e.ConversationId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany<SupportTicket>()
-                .WithOne()
+            builder.HasMany(e => e.Tickets)
+                .WithOne(e => e.Conversation)
                 .HasForeignKey(e => e.ConversationId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasMany<OrderStatusCheck>()
-                .WithOne()
+                .WithOne(e => e.Conversation)
                 .HasForeignKey(e => e.ConversationId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasMany<RefundRequest>()
-                .WithOne()
+                .WithOne(e => e.Conversation)
                 .HasForeignKey(e => e.ConversationId)
                 .OnDelete(DeleteBehavior.NoAction);
         }

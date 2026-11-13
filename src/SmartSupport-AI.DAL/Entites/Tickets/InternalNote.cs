@@ -13,5 +13,9 @@ namespace SmartSupport_AI.DAL.Entites
         public string Content { get; set; } = string.Empty;
 
         public DateTime CreatedAt { get; set; }
+
+        public SupportTicket Ticket { get; set; } = null!;
+
+        public SupportAgent Agent { get; set; } = null!;
     }
 }

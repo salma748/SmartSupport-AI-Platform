@@ -17,5 +17,7 @@ namespace SmartSupport_AI.DAL.Entites
         public string Status { get; set; } = string.Empty;
 
         public DateTime ExecutedAt { get; set; }
+
+        public AIResponse Response { get; set; } = null!;
     }
 }

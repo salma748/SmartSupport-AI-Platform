@@ -19,5 +19,11 @@ namespace SmartSupport_AI.DAL.Entites
         public string Status { get; set; } = string.Empty;
 
         public DateTime CreatedAt { get; set; }
+
+        public Administrator? Administrator { get; set; }
+
+        public Customer? Customer { get; set; }
+
+        public SupportAgent? SupportAgent { get; set; }
     }
 }

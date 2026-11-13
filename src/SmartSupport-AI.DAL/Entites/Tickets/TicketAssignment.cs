@@ -13,5 +13,9 @@ namespace SmartSupport_AI.DAL.Entites
         public DateTime AssignedAt { get; set; }
 
         public bool IsCurrent { get; set; }
+
+        public SupportTicket Ticket { get; set; } = null!;
+
+        public SupportAgent Agent { get; set; } = null!;
     }
 }

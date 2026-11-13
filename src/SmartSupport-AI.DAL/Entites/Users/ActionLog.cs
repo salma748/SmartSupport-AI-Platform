@@ -17,5 +17,11 @@ namespace SmartSupport_AI.DAL.Entites
         public string? Details { get; set; }
 
         public DateTime CreatedAt { get; set; }
+
+        public User? User { get; set; }
+
+        public Conversation? Conversation { get; set; }
+
+        public SupportTicket? Ticket { get; set; }
     }
 }

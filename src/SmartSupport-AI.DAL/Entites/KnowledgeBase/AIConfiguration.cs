@@ -17,5 +17,7 @@ namespace SmartSupport_AI.DAL.Entites
         public bool IsActive { get; set; }
 
         public DateTime CreatedAt { get; set; }
+
+        public Administrator CreatedByAdministrator { get; set; } = null!;
     }
 }

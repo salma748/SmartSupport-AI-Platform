@@ -16,29 +16,29 @@ namespace SmartSupport_AI.DAL.Configurations
 
             builder.Property(e => e.Availability).IsRequired();
 
-            builder.HasOne<User>()
-                .WithOne()
+            builder.HasOne(e => e.User)
+                .WithOne(e => e.SupportAgent)
                 .HasForeignKey<SupportAgent>(e => e.UserId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasMany<TicketAssignment>()
-                .WithOne()
+            builder.HasMany(e => e.TicketAssignments)
+                .WithOne(e => e.Agent)
                 .HasForeignKey(e => e.AgentId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasMany<InternalNote>()
-                .WithOne()
+                .WithOne(e => e.Agent)
                 .HasForeignKey(e => e.AgentId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasMany<PerformanceMetric>()
-                .WithOne()
+                .WithOne(e => e.Agent)
                 .HasForeignKey(e => e.AgentId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasMany<Message>()
-                .WithOne()
+                .WithOne(e => e.Agent)
                 .HasForeignKey(e => e.AgentId)
                 .OnDelete(DeleteBehavior.NoAction);
         }

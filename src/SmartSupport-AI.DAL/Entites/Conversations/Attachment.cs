@@ -19,5 +19,11 @@ namespace SmartSupport_AI.DAL.Entites
         public long FileSize { get; set; }
 
         public DateTime UploadedAt { get; set; }
+
+        public Message? Message { get; set; }
+
+        public SupportTicket? Ticket { get; set; }
+
+        public User Uploader { get; set; } = null!;
     }
 }

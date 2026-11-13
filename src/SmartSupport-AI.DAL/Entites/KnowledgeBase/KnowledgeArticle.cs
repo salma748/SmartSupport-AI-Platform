@@ -17,5 +17,11 @@ namespace SmartSupport_AI.DAL.Entites
         public string Status { get; set; } = string.Empty;
 
         public DateTime UpdatedAt { get; set; }
+
+        public ArticleCategory Category { get; set; } = null!;
+
+        public Administrator CreatedByAdministrator { get; set; } = null!;
+
+        public ICollection<ResponseArticle> ResponseArticles { get; set; } = new List<ResponseArticle>();
     }
 }

@@ -12,24 +12,24 @@ namespace SmartSupport_AI.DAL.Configurations
 
             builder.Property(e => e.AccessLevel).IsRequired();
 
-            builder.HasOne<User>()
-                .WithOne()
+            builder.HasOne(e => e.User)
+                .WithOne(e => e.Administrator)
                 .HasForeignKey<Administrator>(e => e.UserId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasMany<AIConfiguration>()
-                .WithOne()
+                .WithOne(e => e.CreatedByAdministrator)
                 .HasForeignKey(e => e.CreatedBy)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasMany<KnowledgeArticle>()
-                .WithOne()
+                .WithOne(e => e.CreatedByAdministrator)
                 .HasForeignKey(e => e.CreatedBy)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasMany<SystemPolicy>()
-                .WithOne()
+                .WithOne(e => e.UpdatedByAdministrator)
                 .HasForeignKey(e => e.UpdatedBy)
                 .OnDelete(DeleteBehavior.NoAction);
         }

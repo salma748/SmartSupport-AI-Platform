@@ -15,5 +15,9 @@ namespace SmartSupport_AI.DAL.Entites
         public string NewStatus { get; set; } = string.Empty;
 
         public DateTime ChangedAt { get; set; }
+
+        public SupportTicket Ticket { get; set; } = null!;
+
+        public User ChangedByUser { get; set; } = null!;
     }
 }

@@ -21,5 +21,15 @@ namespace SmartSupport_AI.DAL.Entites
         public DateTime StartedAt { get; set; }
 
         public DateTime? EndedAt { get; set; }
+
+        public AIConfiguration Configuration { get; set; } = null!;
+
+        public Customer Customer { get; set; } = null!;
+
+        public ICollection<Message> Messages { get; set; } = new List<Message>();
+
+        public ICollection<CustomerFeedback> Feedback { get; set; } = new List<CustomerFeedback>();
+
+        public ICollection<SupportTicket> Tickets { get; set; } = new List<SupportTicket>();
     }
 }

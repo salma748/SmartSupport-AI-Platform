@@ -15,17 +15,17 @@ namespace SmartSupport_AI.DAL.Configurations
             builder.Property(e => e.CreatedAt).IsRequired();
 
             builder.HasMany<CustomerFeedback>()
-                .WithOne()
+                .WithOne(e => e.Response)
                 .HasForeignKey(e => e.ResponseId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasMany<ToolExecution>()
-                .WithOne()
+            builder.HasMany(e => e.ToolExecutions)
+                .WithOne(e => e.Response)
                 .HasForeignKey(e => e.ResponseId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasMany<ResponseArticle>()
-                .WithOne()
+            builder.HasMany(e => e.ResponseArticles)
+                .WithOne(e => e.Response)
                 .HasForeignKey(e => e.ResponseId)
                 .OnDelete(DeleteBehavior.Cascade);
         }

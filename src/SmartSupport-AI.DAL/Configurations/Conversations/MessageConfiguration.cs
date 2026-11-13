@@ -18,19 +18,19 @@ namespace SmartSupport_AI.DAL.Configurations
 
             builder.HasIndex(e => new { e.ConversationId, e.SequenceNo }).IsUnique();
 
-            builder.HasOne<AIResponse>()
-                .WithOne()
+            builder.HasOne(e => e.AIResponse)
+                .WithOne(e => e.Message)
                 .HasForeignKey<AIResponse>(e => e.MessageId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany<AIResponse>()
-                .WithOne()
+            builder.HasMany(e => e.TriggeredAIResponses)
+                .WithOne(e => e.TriggerMessage)
                 .HasForeignKey(e => e.TriggerMsgId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasMany<Attachment>()
-                .WithOne()
+            builder.HasMany(e => e.Attachments)
+                .WithOne(e => e.Message)
                 .HasForeignKey(e => e.MessageId)
                 .OnDelete(DeleteBehavior.NoAction);
         }

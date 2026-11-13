@@ -21,12 +21,12 @@ namespace SmartSupport_AI.DAL.Configurations
             builder.Property(e => e.ExecutedAt).IsRequired();
 
             builder.HasMany<OrderStatusCheck>()
-                .WithOne()
+                .WithOne(e => e.ToolExecution)
                 .HasForeignKey(e => e.ExecutionId)
                 .OnDelete(DeleteBehavior.SetNull);
 
             builder.HasMany<RefundRequest>()
-                .WithOne()
+                .WithOne(e => e.ToolExecution)
                 .HasForeignKey(e => e.ExecutionId)
                 .OnDelete(DeleteBehavior.SetNull);
         }

@@ -13,6 +13,7 @@ namespace SmartSupport_AI.DAL.Migrations
     [DbContext(typeof(SmartSupportDbContext))]
     partial class SmartSupportDbContextModelSnapshot : ModelSnapshot
     {
+        /// <inheritdoc />
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
@@ -319,9 +320,6 @@ namespace SmartSupport_AI.DAL.Migrations
                     b.Property<int>("ConversationId")
                         .HasColumnType("int");
 
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsHelpful")
                         .HasColumnType("bit");
 
@@ -334,8 +332,6 @@ namespace SmartSupport_AI.DAL.Migrations
                     b.HasKey("FeedbackId");
 
                     b.HasIndex("ConversationId");
-
-                    b.HasIndex("CustomerId");
 
                     b.HasIndex("ResponseId");
 
@@ -738,9 +734,6 @@ namespace SmartSupport_AI.DAL.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
-
                     b.Property<string>("EscalationReason")
                         .HasColumnType("nvarchar(max)");
 
@@ -755,8 +748,6 @@ namespace SmartSupport_AI.DAL.Migrations
                     b.HasKey("TicketId");
 
                     b.HasIndex("ConversationId");
-
-                    b.HasIndex("CustomerId");
 
                     b.ToTable("SupportTickets");
                 });
@@ -818,7 +809,9 @@ namespace SmartSupport_AI.DAL.Migrations
 
                     b.HasIndex("AgentId");
 
-                    b.HasIndex("TicketId");
+                    b.HasIndex("TicketId")
+                        .IsUnique()
+                        .HasFilter("[IsCurrent] = 1");
 
                     b.ToTable("TicketAssignments");
                 });
@@ -939,335 +932,495 @@ namespace SmartSupport_AI.DAL.Migrations
 
             modelBuilder.Entity("SmartSupport_AI.DAL.Entites.AIConfiguration", b =>
                 {
-                    b.HasOne("SmartSupport_AI.DAL.Entites.Administrator", null)
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Administrator", "CreatedByAdministrator")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("CreatedByAdministrator");
                 });
 
             modelBuilder.Entity("SmartSupport_AI.DAL.Entites.AIResponse", b =>
                 {
-                    b.HasOne("SmartSupport_AI.DAL.Entites.AIConfiguration", null)
+                    b.HasOne("SmartSupport_AI.DAL.Entites.AIConfiguration", "Configuration")
                         .WithMany()
                         .HasForeignKey("ConfigId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SmartSupport_AI.DAL.Entites.Intent", null)
-                        .WithMany()
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Intent", "Intent")
+                        .WithMany("Responses")
                         .HasForeignKey("IntentId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SmartSupport_AI.DAL.Entites.Message", null)
-                        .WithOne()
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Message", "Message")
+                        .WithOne("AIResponse")
                         .HasForeignKey("SmartSupport_AI.DAL.Entites.AIResponse", "MessageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SmartSupport_AI.DAL.Entites.Message", null)
-                        .WithMany()
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Message", "TriggerMessage")
+                        .WithMany("TriggeredAIResponses")
                         .HasForeignKey("TriggerMsgId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("Configuration");
+
+                    b.Navigation("Intent");
+
+                    b.Navigation("Message");
+
+                    b.Navigation("TriggerMessage");
                 });
 
             modelBuilder.Entity("SmartSupport_AI.DAL.Entites.ActionLog", b =>
                 {
-                    b.HasOne("SmartSupport_AI.DAL.Entites.Conversation", null)
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Conversation", "Conversation")
                         .WithMany()
                         .HasForeignKey("ConversationId")
                         .OnDelete(DeleteBehavior.NoAction);
 
-                    b.HasOne("SmartSupport_AI.DAL.Entites.SupportTicket", null)
+                    b.HasOne("SmartSupport_AI.DAL.Entites.SupportTicket", "Ticket")
                         .WithMany()
                         .HasForeignKey("TicketId")
                         .OnDelete(DeleteBehavior.NoAction);
 
-                    b.HasOne("SmartSupport_AI.DAL.Entites.User", null)
+                    b.HasOne("SmartSupport_AI.DAL.Entites.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("Conversation");
+
+                    b.Navigation("Ticket");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("SmartSupport_AI.DAL.Entites.Administrator", b =>
                 {
-                    b.HasOne("SmartSupport_AI.DAL.Entites.User", null)
-                        .WithOne()
+                    b.HasOne("SmartSupport_AI.DAL.Entites.User", "User")
+                        .WithOne("Administrator")
                         .HasForeignKey("SmartSupport_AI.DAL.Entites.Administrator", "UserId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("SmartSupport_AI.DAL.Entites.Attachment", b =>
                 {
-                    b.HasOne("SmartSupport_AI.DAL.Entites.Message", null)
-                        .WithMany()
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Message", "Message")
+                        .WithMany("Attachments")
                         .HasForeignKey("MessageId")
                         .OnDelete(DeleteBehavior.NoAction);
 
-                    b.HasOne("SmartSupport_AI.DAL.Entites.SupportTicket", null)
-                        .WithMany()
+                    b.HasOne("SmartSupport_AI.DAL.Entites.SupportTicket", "Ticket")
+                        .WithMany("Attachments")
                         .HasForeignKey("TicketId")
                         .OnDelete(DeleteBehavior.NoAction);
 
-                    b.HasOne("SmartSupport_AI.DAL.Entites.User", null)
+                    b.HasOne("SmartSupport_AI.DAL.Entites.User", "Uploader")
                         .WithMany()
                         .HasForeignKey("UploadedBy")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("Message");
+
+                    b.Navigation("Ticket");
+
+                    b.Navigation("Uploader");
                 });
 
             modelBuilder.Entity("SmartSupport_AI.DAL.Entites.Conversation", b =>
                 {
-                    b.HasOne("SmartSupport_AI.DAL.Entites.AIConfiguration", null)
+                    b.HasOne("SmartSupport_AI.DAL.Entites.AIConfiguration", "Configuration")
                         .WithMany()
                         .HasForeignKey("ConfigId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SmartSupport_AI.DAL.Entites.Customer", null)
-                        .WithMany()
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Customer", "Customer")
+                        .WithMany("Conversations")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("Configuration");
+
+                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("SmartSupport_AI.DAL.Entites.Customer", b =>
                 {
-                    b.HasOne("SmartSupport_AI.DAL.Entites.User", null)
-                        .WithOne()
+                    b.HasOne("SmartSupport_AI.DAL.Entites.User", "User")
+                        .WithOne("Customer")
                         .HasForeignKey("SmartSupport_AI.DAL.Entites.Customer", "UserId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("SmartSupport_AI.DAL.Entites.CustomerFeedback", b =>
                 {
-                    b.HasOne("SmartSupport_AI.DAL.Entites.Conversation", null)
-                        .WithMany()
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Conversation", "Conversation")
+                        .WithMany("Feedback")
                         .HasForeignKey("ConversationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SmartSupport_AI.DAL.Entites.Customer", null)
-                        .WithMany()
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("SmartSupport_AI.DAL.Entites.AIResponse", null)
+                    b.HasOne("SmartSupport_AI.DAL.Entites.AIResponse", "Response")
                         .WithMany()
                         .HasForeignKey("ResponseId")
                         .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("Conversation");
+
+                    b.Navigation("Response");
                 });
 
             modelBuilder.Entity("SmartSupport_AI.DAL.Entites.InternalNote", b =>
                 {
-                    b.HasOne("SmartSupport_AI.DAL.Entites.SupportAgent", null)
+                    b.HasOne("SmartSupport_AI.DAL.Entites.SupportAgent", "Agent")
                         .WithMany()
                         .HasForeignKey("AgentId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SmartSupport_AI.DAL.Entites.SupportTicket", null)
-                        .WithMany()
+                    b.HasOne("SmartSupport_AI.DAL.Entites.SupportTicket", "Ticket")
+                        .WithMany("InternalNotes")
                         .HasForeignKey("TicketId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Agent");
+
+                    b.Navigation("Ticket");
                 });
 
             modelBuilder.Entity("SmartSupport_AI.DAL.Entites.KnowledgeArticle", b =>
                 {
-                    b.HasOne("SmartSupport_AI.DAL.Entites.ArticleCategory", null)
-                        .WithMany()
+                    b.HasOne("SmartSupport_AI.DAL.Entites.ArticleCategory", "Category")
+                        .WithMany("Articles")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SmartSupport_AI.DAL.Entites.Administrator", null)
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Administrator", "CreatedByAdministrator")
                         .WithMany()
                         .HasForeignKey("CreatedBy")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("CreatedByAdministrator");
                 });
 
             modelBuilder.Entity("SmartSupport_AI.DAL.Entites.Message", b =>
                 {
-                    b.HasOne("SmartSupport_AI.DAL.Entites.SupportAgent", null)
+                    b.HasOne("SmartSupport_AI.DAL.Entites.SupportAgent", "Agent")
                         .WithMany()
                         .HasForeignKey("AgentId")
                         .OnDelete(DeleteBehavior.NoAction);
 
-                    b.HasOne("SmartSupport_AI.DAL.Entites.Conversation", null)
-                        .WithMany()
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Conversation", "Conversation")
+                        .WithMany("Messages")
                         .HasForeignKey("ConversationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SmartSupport_AI.DAL.Entites.Customer", null)
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("Agent");
+
+                    b.Navigation("Conversation");
+
+                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("SmartSupport_AI.DAL.Entites.Order", b =>
                 {
-                    b.HasOne("SmartSupport_AI.DAL.Entites.Customer", null)
-                        .WithMany()
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Customer", "Customer")
+                        .WithMany("Orders")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("SmartSupport_AI.DAL.Entites.OrderStatusCheck", b =>
                 {
-                    b.HasOne("SmartSupport_AI.DAL.Entites.Conversation", null)
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Conversation", "Conversation")
                         .WithMany()
                         .HasForeignKey("ConversationId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SmartSupport_AI.DAL.Entites.ToolExecution", null)
+                    b.HasOne("SmartSupport_AI.DAL.Entites.ToolExecution", "ToolExecution")
                         .WithMany()
                         .HasForeignKey("ExecutionId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("SmartSupport_AI.DAL.Entites.Order", null)
-                        .WithMany()
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Order", "Order")
+                        .WithMany("StatusChecks")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Conversation");
+
+                    b.Navigation("Order");
+
+                    b.Navigation("ToolExecution");
                 });
 
             modelBuilder.Entity("SmartSupport_AI.DAL.Entites.PerformanceMetric", b =>
                 {
-                    b.HasOne("SmartSupport_AI.DAL.Entites.SupportAgent", null)
+                    b.HasOne("SmartSupport_AI.DAL.Entites.SupportAgent", "Agent")
                         .WithMany()
                         .HasForeignKey("AgentId")
                         .OnDelete(DeleteBehavior.NoAction);
 
-                    b.HasOne("SmartSupport_AI.DAL.Entites.AIConfiguration", null)
+                    b.HasOne("SmartSupport_AI.DAL.Entites.AIConfiguration", "Configuration")
                         .WithMany()
                         .HasForeignKey("ConfigId")
                         .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Agent");
+
+                    b.Navigation("Configuration");
                 });
 
             modelBuilder.Entity("SmartSupport_AI.DAL.Entites.RefundRequest", b =>
                 {
-                    b.HasOne("SmartSupport_AI.DAL.Entites.Conversation", null)
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Conversation", "Conversation")
                         .WithMany()
                         .HasForeignKey("ConversationId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SmartSupport_AI.DAL.Entites.ToolExecution", null)
+                    b.HasOne("SmartSupport_AI.DAL.Entites.ToolExecution", "ToolExecution")
                         .WithMany()
                         .HasForeignKey("ExecutionId")
                         .OnDelete(DeleteBehavior.SetNull);
 
-                    b.HasOne("SmartSupport_AI.DAL.Entites.Order", null)
-                        .WithMany()
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Order", "Order")
+                        .WithMany("RefundRequests")
                         .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("Conversation");
+
+                    b.Navigation("Order");
+
+                    b.Navigation("ToolExecution");
                 });
 
             modelBuilder.Entity("SmartSupport_AI.DAL.Entites.RefundStatusHistory", b =>
                 {
-                    b.HasOne("SmartSupport_AI.DAL.Entites.RefundRequest", null)
-                        .WithMany()
+                    b.HasOne("SmartSupport_AI.DAL.Entites.RefundRequest", "RefundRequest")
+                        .WithMany("StatusHistory")
                         .HasForeignKey("RefundId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("RefundRequest");
                 });
 
             modelBuilder.Entity("SmartSupport_AI.DAL.Entites.ResponseArticle", b =>
                 {
-                    b.HasOne("SmartSupport_AI.DAL.Entites.KnowledgeArticle", null)
-                        .WithMany()
+                    b.HasOne("SmartSupport_AI.DAL.Entites.KnowledgeArticle", "Article")
+                        .WithMany("ResponseArticles")
                         .HasForeignKey("ArticleId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SmartSupport_AI.DAL.Entites.AIResponse", null)
-                        .WithMany()
+                    b.HasOne("SmartSupport_AI.DAL.Entites.AIResponse", "Response")
+                        .WithMany("ResponseArticles")
                         .HasForeignKey("ResponseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Article");
+
+                    b.Navigation("Response");
                 });
 
             modelBuilder.Entity("SmartSupport_AI.DAL.Entites.SupportAgent", b =>
                 {
-                    b.HasOne("SmartSupport_AI.DAL.Entites.User", null)
-                        .WithOne()
+                    b.HasOne("SmartSupport_AI.DAL.Entites.User", "User")
+                        .WithOne("SupportAgent")
                         .HasForeignKey("SmartSupport_AI.DAL.Entites.SupportAgent", "UserId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("SmartSupport_AI.DAL.Entites.SupportTicket", b =>
                 {
-                    b.HasOne("SmartSupport_AI.DAL.Entites.Conversation", null)
-                        .WithMany()
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Conversation", "Conversation")
+                        .WithMany("Tickets")
                         .HasForeignKey("ConversationId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SmartSupport_AI.DAL.Entites.Customer", null)
-                        .WithMany()
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                    b.Navigation("Conversation");
                 });
 
             modelBuilder.Entity("SmartSupport_AI.DAL.Entites.SystemPolicy", b =>
                 {
-                    b.HasOne("SmartSupport_AI.DAL.Entites.Administrator", null)
+                    b.HasOne("SmartSupport_AI.DAL.Entites.Administrator", "UpdatedByAdministrator")
                         .WithMany()
                         .HasForeignKey("UpdatedBy")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("UpdatedByAdministrator");
                 });
 
             modelBuilder.Entity("SmartSupport_AI.DAL.Entites.TicketAssignment", b =>
                 {
-                    b.HasOne("SmartSupport_AI.DAL.Entites.SupportAgent", null)
-                        .WithMany()
+                    b.HasOne("SmartSupport_AI.DAL.Entites.SupportAgent", "Agent")
+                        .WithMany("TicketAssignments")
                         .HasForeignKey("AgentId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SmartSupport_AI.DAL.Entites.SupportTicket", null)
-                        .WithMany()
+                    b.HasOne("SmartSupport_AI.DAL.Entites.SupportTicket", "Ticket")
+                        .WithMany("Assignments")
                         .HasForeignKey("TicketId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("Agent");
+
+                    b.Navigation("Ticket");
                 });
 
             modelBuilder.Entity("SmartSupport_AI.DAL.Entites.TicketStatusHistory", b =>
                 {
-                    b.HasOne("SmartSupport_AI.DAL.Entites.User", null)
+                    b.HasOne("SmartSupport_AI.DAL.Entites.User", "ChangedByUser")
                         .WithMany()
                         .HasForeignKey("ChangedBy")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("SmartSupport_AI.DAL.Entites.SupportTicket", null)
-                        .WithMany()
+                    b.HasOne("SmartSupport_AI.DAL.Entites.SupportTicket", "Ticket")
+                        .WithMany("StatusHistory")
                         .HasForeignKey("TicketId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("ChangedByUser");
+
+                    b.Navigation("Ticket");
                 });
 
             modelBuilder.Entity("SmartSupport_AI.DAL.Entites.ToolExecution", b =>
                 {
-                    b.HasOne("SmartSupport_AI.DAL.Entites.AIResponse", null)
-                        .WithMany()
+                    b.HasOne("SmartSupport_AI.DAL.Entites.AIResponse", "Response")
+                        .WithMany("ToolExecutions")
                         .HasForeignKey("ResponseId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("Response");
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.AIResponse", b =>
+                {
+                    b.Navigation("ResponseArticles");
+
+                    b.Navigation("ToolExecutions");
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.ArticleCategory", b =>
+                {
+                    b.Navigation("Articles");
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.Conversation", b =>
+                {
+                    b.Navigation("Feedback");
+
+                    b.Navigation("Messages");
+
+                    b.Navigation("Tickets");
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.Customer", b =>
+                {
+                    b.Navigation("Conversations");
+
+                    b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.Intent", b =>
+                {
+                    b.Navigation("Responses");
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.KnowledgeArticle", b =>
+                {
+                    b.Navigation("ResponseArticles");
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.Message", b =>
+                {
+                    b.Navigation("AIResponse");
+
+                    b.Navigation("Attachments");
+
+                    b.Navigation("TriggeredAIResponses");
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.Order", b =>
+                {
+                    b.Navigation("RefundRequests");
+
+                    b.Navigation("StatusChecks");
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.RefundRequest", b =>
+                {
+                    b.Navigation("StatusHistory");
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.SupportAgent", b =>
+                {
+                    b.Navigation("TicketAssignments");
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.SupportTicket", b =>
+                {
+                    b.Navigation("Assignments");
+
+                    b.Navigation("Attachments");
+
+                    b.Navigation("InternalNotes");
+
+                    b.Navigation("StatusHistory");
+                });
+
+            modelBuilder.Entity("SmartSupport_AI.DAL.Entites.User", b =>
+                {
+                    b.Navigation("Administrator");
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("SupportAgent");
                 });
 #pragma warning restore 612, 618
         }

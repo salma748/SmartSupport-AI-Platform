@@ -14,34 +14,24 @@ namespace SmartSupport_AI.DAL.Configurations
 
             builder.Property(e => e.RegisteredAt).IsRequired();
 
-            builder.HasOne<User>()
-                .WithOne()
+            builder.HasOne(e => e.User)
+                .WithOne(e => e.Customer)
                 .HasForeignKey<Customer>(e => e.UserId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasMany<Conversation>()
-                .WithOne()
-                .HasForeignKey(e => e.CustomerId)
-                .OnDelete(DeleteBehavior.NoAction);
-
-            builder.HasMany<CustomerFeedback>()
-                .WithOne()
+            builder.HasMany(e => e.Conversations)
+                .WithOne(e => e.Customer)
                 .HasForeignKey(e => e.CustomerId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasMany<Message>()
-                .WithOne()
+                .WithOne(e => e.Customer)
                 .HasForeignKey(e => e.CustomerId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasMany<SupportTicket>()
-                .WithOne()
-                .HasForeignKey(e => e.CustomerId)
-                .OnDelete(DeleteBehavior.NoAction);
-
-            builder.HasMany<Order>()
-                .WithOne()
+            builder.HasMany(e => e.Orders)
+                .WithOne(e => e.Customer)
                 .HasForeignKey(e => e.CustomerId)
                 .OnDelete(DeleteBehavior.NoAction);
         }

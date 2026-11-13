@@ -29,12 +29,12 @@ namespace SmartSupport_AI.DAL.Configurations
             builder.Property(e => e.CreatedAt).IsRequired();
 
             builder.HasMany<Attachment>()
-                .WithOne()
+                .WithOne(e => e.Uploader)
                 .HasForeignKey(e => e.UploadedBy)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasMany<TicketStatusHistory>()
-                .WithOne()
+                .WithOne(e => e.ChangedByUser)
                 .HasForeignKey(e => e.ChangedBy)
                 .OnDelete(DeleteBehavior.NoAction);
         }

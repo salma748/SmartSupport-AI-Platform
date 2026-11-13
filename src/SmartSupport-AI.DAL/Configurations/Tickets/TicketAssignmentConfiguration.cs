@@ -11,6 +11,10 @@ namespace SmartSupport_AI.DAL.Configurations
             builder.HasKey(e => e.AssignmentId);
 
             builder.Property(e => e.AssignedAt).IsRequired();
+
+            builder.HasIndex(e => e.TicketId)
+                .IsUnique()
+                .HasFilter("[IsCurrent] = 1");
         }
     }
 }
