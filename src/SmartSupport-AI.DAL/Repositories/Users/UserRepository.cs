@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using SmartSupport_AI.DAL.Contexts;
 using SmartSupport_AI.DAL.Entites;
 using SmartSupport_AI.DAL.Repositories.Interfaces.Users;
@@ -11,14 +12,14 @@ namespace SmartSupport_AI.DAL.Repositories.Users
         {
         }
 
-        public User? GetByEmail(string email)
+        public Task<User?> GetByEmailAsync(string email)
         {
-            return _context.Users.FirstOrDefault(user => user.Email == email);
+            return _context.Users.FirstOrDefaultAsync(user => user.Email == email);
         }
 
-        public bool EmailExists(string email)
+        public Task<bool> EmailExistsAsync(string email)
         {
-            return _context.Users.Any(user => user.Email == email);
+            return _context.Users.AnyAsync(user => user.Email == email);
         }
     }
 }

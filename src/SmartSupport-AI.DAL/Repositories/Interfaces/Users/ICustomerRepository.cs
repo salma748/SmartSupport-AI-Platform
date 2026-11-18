@@ -4,6 +4,6 @@ namespace SmartSupport_AI.DAL.Repositories.Interfaces.Users
 {
     public interface ICustomerRepository : IGenericRepository<Customer>
     {
-        Customer? GetByUserId(int userId);
+        Task<Customer?> GetByUserIdAsync(int userId);
     }
 }

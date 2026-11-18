@@ -4,8 +4,8 @@ namespace SmartSupport_AI.DAL.Repositories.Interfaces.Users
 {
     public interface IUserRepository : IGenericRepository<User>
     {
-        User? GetByEmail(string email);
+        Task<User?> GetByEmailAsync(string email);
 
-        bool EmailExists(string email);
+        Task<bool> EmailExistsAsync(string email);
     }
 }
