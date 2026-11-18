@@ -2,9 +2,9 @@ namespace SmartSupport_AI.DAL.Repositories.Interfaces
 {
     public interface IGenericRepository<T> where T : class
     {
-        T? GetById(params object[] keyValues);
+        Task<T?> GetByIdAsync(params object[] keyValues);
 
-        List<T> GetAll();
+        Task<List<T>> GetAllAsync();
 
         void Add(T entity);
 
@@ -12,6 +12,6 @@ namespace SmartSupport_AI.DAL.Repositories.Interfaces
 
         void Delete(T entity);
 
-        int SaveChanges();
+        Task<int> SaveChangesAsync();
     }
 }
