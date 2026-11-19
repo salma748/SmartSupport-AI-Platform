@@ -15,14 +15,14 @@ namespace SmartSupport_AI.DAL.Repositories
             _entities = context.Set<T>();
         }
 
-        public T? GetById(params object[] keyValues)
+        public async Task<T?> GetByIdAsync(params object[] keyValues)
         {
-            return _entities.Find(keyValues);
+            return await _entities.FindAsync(keyValues);
         }
 
-        public List<T> GetAll()
+        public Task<List<T>> GetAllAsync()
         {
-            return _entities.ToList();
+            return _entities.ToListAsync();
         }
 
         public void Add(T entity)
@@ -40,9 +40,9 @@ namespace SmartSupport_AI.DAL.Repositories
             _entities.Remove(entity);
         }
 
-        public int SaveChanges()
+        public Task<int> SaveChangesAsync()
         {
-            return _context.SaveChanges();
+            return _context.SaveChangesAsync();
         }
     }
 }
