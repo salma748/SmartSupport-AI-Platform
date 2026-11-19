@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartSupport_AI.DAL.Contexts;
 using SmartSupport_AI.DAL.Entites;
-using SmartSupport_AI.DAL.Repositories.Interfaces;
+using SmartSupport_AI.DAL.Repositories.Interfaces.Tickets;
 
-namespace SmartSupport_AI.DAL.Repositories
+namespace SmartSupport_AI.DAL.Repositories.Tickets
 {
     public class TicketAssignmentRepository : GenericRepository<TicketAssignment>, ITicketAssignmentRepository
     {
