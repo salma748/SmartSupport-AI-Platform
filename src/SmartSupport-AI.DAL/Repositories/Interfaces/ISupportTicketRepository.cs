@@ -2,14 +2,10 @@
 
 namespace SmartSupport_AI.DAL.Repositories.Interfaces
 {
-    public interface ISupportTicketRepository
+    public interface ISupportTicketRepository : IGenericRepository<SupportTicket>
     {
-        Task<SupportTicket?> GetByIdAsync(int ticketId);
+        Task<List<SupportTicket>> GetByStatusAsync(string status);
 
-        Task<List<SupportTicket>> GetAllAsync();
-
-        Task AddAsync(SupportTicket ticket);
-
-        Task<int> SaveChangesAsync();
+        Task<SupportTicket?> GetWithDetailsAsync(int ticketId);
     }
 }

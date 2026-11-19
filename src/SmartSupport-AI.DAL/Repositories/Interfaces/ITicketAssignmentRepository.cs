@@ -2,12 +2,10 @@
 
 namespace SmartSupport_AI.DAL.Repositories.Interfaces
 {
-    public interface ITicketAssignmentRepository
+    public interface ITicketAssignmentRepository : IGenericRepository<TicketAssignment>
     {
         Task<TicketAssignment?> GetCurrentByTicketIdAsync(int ticketId);
 
         Task<List<TicketAssignment>> GetByTicketIdAsync(int ticketId);
-
-        Task AddAsync(TicketAssignment assignment);
     }
 }

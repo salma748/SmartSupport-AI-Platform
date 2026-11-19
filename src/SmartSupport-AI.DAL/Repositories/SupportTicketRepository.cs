@@ -5,32 +5,29 @@ using SmartSupport_AI.DAL.Repositories.Interfaces;
 
 namespace SmartSupport_AI.DAL.Repositories
 {
-    public class SupportTicketRepository
-        : GenericRepository<SupportTicket>, ISupportTicketRepository
+    public class SupportTicketRepository : GenericRepository<SupportTicket>, ISupportTicketRepository
     {
-        public SupportTicketRepository(SmartSupportDbContext context)
-            : base(context)
+        public SupportTicketRepository(SmartSupportDbContext context) : base(context)
         {
         }
 
-        public async Task<SupportTicket?> GetByIdAsync(int ticketId)
+        public async Task<List<SupportTicket>> GetByStatusAsync(string status)
         {
-            return await _context.SupportTickets.FindAsync(ticketId);
+            return await _context.SupportTickets
+                .AsNoTracking()
+                .Where(t => t.Status == status)
+                .OrderBy(t => t.CreatedAt)
+                .ToListAsync();
         }
 
-        public async Task<List<SupportTicket>> GetAllAsync()
+        public async Task<SupportTicket?> GetWithDetailsAsync(int ticketId)
         {
-            return await _context.SupportTickets.ToListAsync();
-        }
-
-        public async Task AddAsync(SupportTicket ticket)
-        {
-            await _context.SupportTickets.AddAsync(ticket);
-        }
-
-        public async Task<int> SaveChangesAsync()
-        {
-            return await _context.SaveChangesAsync();
+            return await _context.SupportTickets
+                .Include(t => t.Assignments)
+                .Include(t => t.StatusHistory)
+                .Include(t => t.InternalNotes)
+                .AsSplitQuery()
+                .FirstOrDefaultAsync(t => t.TicketId == ticketId);
         }
     }
 }

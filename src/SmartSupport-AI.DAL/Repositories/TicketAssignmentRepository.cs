@@ -20,14 +20,10 @@ namespace SmartSupport_AI.DAL.Repositories
         public async Task<List<TicketAssignment>> GetByTicketIdAsync(int ticketId)
         {
             return await _context.TicketAssignments
+                .AsNoTracking()
                 .Where(a => a.TicketId == ticketId)
                 .OrderByDescending(a => a.AssignedAt)
                 .ToListAsync();
-        }
-
-        public async Task AddAsync(TicketAssignment assignment)
-        {
-            await _context.TicketAssignments.AddAsync(assignment);
         }
     }
 }

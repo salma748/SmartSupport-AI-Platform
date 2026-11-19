@@ -19,10 +19,5 @@ namespace SmartSupport_AI.DAL.Repositories
                 .OrderBy(n => n.CreatedAt)
                 .ToListAsync();
         }
-
-        public async Task AddAsync(InternalNote note)
-        {
-            await _context.InternalNotes.AddAsync(note);
-        }
     }
 }

@@ -19,10 +19,5 @@ namespace SmartSupport_AI.DAL.Repositories
                 .OrderBy(h => h.ChangedAt)
                 .ToListAsync();
         }
-
-        public async Task AddAsync(TicketStatusHistory history)
-        {
-            await _context.TicketStatusHistories.AddAsync(history);
-        }
     }
 }
