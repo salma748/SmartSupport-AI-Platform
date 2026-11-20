@@ -1,0 +1,71 @@
+@model SmartSupport_AI.BLL.AdminDesk
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment Host
+@{
+    ViewData["Title"] = "Support administration";
+}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3">Support administration</h1>
+    <form asp-controller="Support" asp-action="Logout" method="post"><button class="btn btn-outline-secondary">Sign out</button></form>
+</div>
+@if (TempData["SupportAdminStatus"] is string status)
+{
+    <p class="alert alert-info" role="status">@status</p>
+}
+<div asp-validation-summary="All" class="text-danger"></div>
+<dl class="row">
+    <dt class="col-sm-7">Conversations</dt><dd class="col-sm-5">@Model.Overview.Conversations</dd>
+    <dt class="col-sm-7">Tickets</dt><dd class="col-sm-5">@Model.Overview.Tickets</dd>
+    <dt class="col-sm-7">Assistant responses</dt><dd class="col-sm-5">@Model.Overview.Responses</dd>
+    <dt class="col-sm-7">Assistant responses with escalation</dt><dd class="col-sm-5">@Model.Overview.EscalatedResponses</dd>
+    <dt class="col-sm-7">Rated conversations</dt><dd class="col-sm-5">@Model.Overview.Rated</dd>
+    <dt class="col-sm-7">Average rating</dt><dd class="col-sm-5">@(Model.Overview.AverageRating?.ToString("F1") ?? "No ratings")</dd>
+</dl>
+<div class="row g-3">
+    <section class="col-lg-7">
+        <div class="card p-3 h-100">
+            <h2 class="h5">Knowledge articles</h2>
+            @if (Model.Articles.Count == 0) { <p>No articles have been added.</p> }
+            <ul class="list-group list-group-flush mb-3">
+                @foreach (var article in Model.Articles)
+                {
+                    <li class="list-group-item">#@article.Id · @article.Title · @article.Category · @article.Status</li>
+                }
+            </ul>
+            <form asp-action="Article" method="post">
+                <label class="form-label" for="id">Article ID to update (optional)</label>
+                <input type="number" id="id" name="id" min="1" class="form-control mb-2" />
+                <label class="form-label" for="title">Title</label>
+                <input id="title" name="title" maxlength="200" class="form-control mb-2" required />
+                <label class="form-label" for="category">Category</label>
+                <input id="category" name="category" maxlength="100" class="form-control mb-2" required />
+                <label class="form-label" for="content">Approved customer-facing content</label>
+                <textarea id="content" name="content" maxlength="4000" rows="5" class="form-control mb-2" required></textarea>
+                <label class="form-check mb-2"><input type="checkbox" name="publish" value="true" class="form-check-input" /> Publish</label>
+                <button class="btn btn-primary">Save article</button>
+            </form>
+        </div>
+    </section>
+    <section class="col-lg-5">
+        <div class="card p-3">
+            <h2 class="h5">Support policies</h2>
+            <p>@(Model.Policies.Count == 0 ? "No policies configured." : "Configured: " + string.Join(", ", Model.Policies))</p>
+            <form asp-action="Policy" method="post">
+                <label class="form-label" for="name">Policy</label>
+                <select id="name" name="name" class="form-select mb-2">
+                    <option>RefundEligibility</option>
+                    <option>DefaultTicketPriority</option>
+                </select>
+                <label class="form-label" for="value">Approved policy value</label>
+                <textarea id="value" name="value" maxlength="4000" rows="4" class="form-control mb-2" required></textarea>
+                <p class="small text-muted">Refund eligibility takes JSON with maxDaysFromOrder and eligibleStatuses. Ticket priority takes Low, Normal, High, or Urgent.</p>
+                <button class="btn btn-primary">Save policy</button>
+            </form>
+        </div>
+        @if (Host.IsDevelopment())
+        {
+            <form asp-action="Probe" method="post" class="mt-3">
+                <button class="btn btn-outline-secondary">Verify Gemini connection</button>
+            </form>
+        }
+    </section>
+</div>

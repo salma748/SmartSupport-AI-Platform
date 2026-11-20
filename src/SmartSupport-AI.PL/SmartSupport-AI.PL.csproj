@@ -20,4 +20,8 @@
     <ProjectReference Include="..\SmartSupport-AI.DAL\SmartSupport-AI.DAL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="gemini.secrets.json" CopyToOutputDirectory="Never" CopyToPublishDirectory="Never" />
+  </ItemGroup>
+
 </Project>

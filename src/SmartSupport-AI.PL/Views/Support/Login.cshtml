@@ -1,0 +1,14 @@
+@{
+    ViewData["Title"] = "Support sign-in";
+}
+<section class="card shadow-sm mx-auto mt-5 p-4" style="max-width: 28rem">
+    <h1 class="h3">Sign in to SmartSupport</h1>
+    <form asp-action="Login" method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <label class="form-label mt-3" for="email">Email</label>
+        <input id="email" name="email" class="form-control" type="email" autocomplete="username" maxlength="256" required />
+        <label class="form-label mt-3" for="password">Password</label>
+        <input id="password" name="password" class="form-control" type="password" autocomplete="current-password" maxlength="256" required />
+        <button class="btn btn-primary mt-4 w-100">Sign in</button>
+    </form>
+</section>

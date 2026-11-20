@@ -1,4 +1,8 @@
 <Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/tests/">
+    <Project Path="tests/SmartSupport-AI.Tests/SmartSupport-AI.Tests.csproj" />
+  </Folder>
   <Project Path="src/SmartSupport-AI.BLL/SmartSupport-AI.BLL.csproj" />
   <Project Path="src/SmartSupport-AI.DAL/SmartSupport-AI.DAL.csproj" />
   <Project Path="src/SmartSupport-AI.PL/SmartSupport-AI.PL.csproj" />
