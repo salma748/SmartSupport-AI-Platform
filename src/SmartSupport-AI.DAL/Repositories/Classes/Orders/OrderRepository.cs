@@ -3,7 +3,7 @@ using SmartSupport_AI.DAL.Contexts;
 using SmartSupport_AI.DAL.Entites;
 using SmartSupport_AI.DAL.Repositories.Interfaces.Orders;
 
-namespace SmartSupport_AI.DAL.Repositories.Orders
+namespace SmartSupport_AI.DAL.Repositories.Classes.Orders
 {
     public class OrderRepository : GenericRepository<Order>, IOrderRepository
     {

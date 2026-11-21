@@ -3,7 +3,7 @@ using SmartSupport_AI.DAL.Contexts;
 using SmartSupport_AI.DAL.Entites;
 using SmartSupport_AI.DAL.Repositories.Interfaces.Tickets;
 
-namespace SmartSupport_AI.DAL.Repositories.Tickets
+namespace SmartSupport_AI.DAL.Repositories.Classes.Tickets
 {
     public class SupportTicketRepository : GenericRepository<SupportTicket>, ISupportTicketRepository
     {

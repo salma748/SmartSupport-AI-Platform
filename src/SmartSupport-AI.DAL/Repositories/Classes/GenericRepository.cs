@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using SmartSupport_AI.DAL.Contexts;
 using SmartSupport_AI.DAL.Repositories.Interfaces;
 
-namespace SmartSupport_AI.DAL.Repositories
+namespace SmartSupport_AI.DAL.Repositories.Classes
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
