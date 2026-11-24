@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SmartSupport_AI.BLL.Constants
+﻿namespace SmartSupport_AI.BLL.Constants
 {
-    internal class TicketPriorities
+    public static class TicketPriorities
     {
+        public const string Low = "Low";
+        public const string Medium = "Medium";
+        public const string High = "High";
     }
 }
