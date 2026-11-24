@@ -40,5 +40,36 @@ namespace SmartSupport_AI.BLL.Services.Classes.Users
                 RegisteredAt = customer.RegisteredAt
             };
         }
+
+        public async Task<CustomerProfileDto?> UpdatePreferredLanguageAsync(int userId, string preferredLanguage)
+        {
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(userId);
+            ArgumentException.ThrowIfNullOrWhiteSpace(preferredLanguage);
+            preferredLanguage = preferredLanguage.Trim();
+
+            var customer = await _customerRepository.GetByUserIdAsync(userId);
+            if (customer is null)
+            {
+                return null;
+            }
+
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user is null)
+            {
+                return null;
+            }
+
+            customer.PreferredLanguage = preferredLanguage;
+            await _customerRepository.SaveChangesAsync();
+
+            return new CustomerProfileDto
+            {
+                CustomerId = customer.CustomerId,
+                UserId = customer.UserId,
+                FullName = user.FullName,
+                PreferredLanguage = customer.PreferredLanguage,
+                RegisteredAt = customer.RegisteredAt
+            };
+        }
     }
 }

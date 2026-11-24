@@ -31,5 +31,34 @@ namespace SmartSupport_AI.BLL.Services.Classes.Users
                 Phone = user.Phone
             };
         }
+
+        public async Task<UserProfileDto?> UpdateProfileAsync(int userId, UpdateUserProfileDto dto)
+        {
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(userId);
+            ArgumentNullException.ThrowIfNull(dto);
+
+            var fullName = dto.FullName;
+            ArgumentException.ThrowIfNullOrWhiteSpace(fullName, nameof(dto.FullName));
+            fullName = fullName.Trim();
+            var phone = dto.Phone?.Trim();
+
+            var user = await _userRepository.GetByIdAsync(userId);
+            if (user is null)
+            {
+                return null;
+            }
+
+            user.FullName = fullName;
+            user.Phone = string.IsNullOrEmpty(phone) ? null : phone;
+            await _userRepository.SaveChangesAsync();
+
+            return new UserProfileDto
+            {
+                UserId = user.UserId,
+                FullName = user.FullName,
+                Email = user.Email,
+                Phone = user.Phone
+            };
+        }
     }
 }
