@@ -25,13 +25,16 @@ namespace SmartSupport_AI.BLL.Services.Classes.Tickets
 
         private readonly ISupportTicketRepository _ticketRepository;
         private readonly ITicketStatusHistoryRepository _historyRepository;
+        private readonly ITicketAssignmentRepository _assignmentRepository;
 
         public TicketService(
             ISupportTicketRepository ticketRepository,
-            ITicketStatusHistoryRepository historyRepository)
+            ITicketStatusHistoryRepository historyRepository,
+            ITicketAssignmentRepository assignmentRepository)
         {
             _ticketRepository = ticketRepository;
             _historyRepository = historyRepository;
+            _assignmentRepository = assignmentRepository;
         }
 
         public async Task<TicketDto> CreateTicketAsync(CreateTicketDto dto)
@@ -98,6 +101,42 @@ namespace SmartSupport_AI.BLL.Services.Classes.Tickets
             return MapToDto(ticket);
         }
 
+        public async Task<TicketAssignmentDto> AssignTicketAsync(AssignTicketDto dto)
+        {
+            var ticket = await _ticketRepository.GetByIdAsync(dto.TicketId);
+
+            if (ticket == null)
+            {
+                throw new KeyNotFoundException($"Ticket {dto.TicketId} was not found");
+            }
+
+            var current = await _assignmentRepository.GetCurrentByTicketIdAsync(dto.TicketId);
+
+            if (current != null)
+            {
+                if (current.AgentId == dto.AgentId)
+                {
+                    return MapToDto(current);
+                }
+
+                current.IsCurrent = false;
+                await _assignmentRepository.SaveChangesAsync();
+            }
+
+            var assignment = new TicketAssignment
+            {
+                TicketId = dto.TicketId,
+                AgentId = dto.AgentId,
+                AssignedAt = DateTime.UtcNow,
+                IsCurrent = true
+            };
+
+            _assignmentRepository.Add(assignment);
+            await _assignmentRepository.SaveChangesAsync();
+
+            return MapToDto(assignment);
+        }
+
         private static TicketDto MapToDto(SupportTicket ticket)
         {
             return new TicketDto
@@ -109,6 +148,18 @@ namespace SmartSupport_AI.BLL.Services.Classes.Tickets
                 EscalationReason = ticket.EscalationReason,
                 ConvSummary = ticket.ConvSummary,
                 CreatedAt = ticket.CreatedAt
+            };
+        }
+
+        private static TicketAssignmentDto MapToDto(TicketAssignment assignment)
+        {
+            return new TicketAssignmentDto
+            {
+                AssignmentId = assignment.AssignmentId,
+                TicketId = assignment.TicketId,
+                AgentId = assignment.AgentId,
+                AssignedAt = assignment.AssignedAt,
+                IsCurrent = assignment.IsCurrent
             };
         }
     }

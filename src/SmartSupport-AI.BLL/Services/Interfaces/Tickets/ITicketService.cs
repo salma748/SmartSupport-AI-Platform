@@ -6,5 +6,6 @@ namespace SmartSupport_AI.BLL.Services.Interfaces.Tickets
     {
         Task<TicketDto> CreateTicketAsync(CreateTicketDto dto);
         Task<TicketDto> ChangeStatusAsync(ChangeTicketStatusDto dto);
+        Task<TicketAssignmentDto> AssignTicketAsync(AssignTicketDto dto);
     }
 }
