@@ -137,6 +137,39 @@ namespace SmartSupport_AI.BLL.Services.Classes.Tickets
             return MapToDto(assignment);
         }
 
+        public async Task<TicketDto?> GetTicketAsync(int ticketId)
+        {
+            var ticket = await _ticketRepository.GetByIdAsync(ticketId);
+
+            return ticket == null ? null : MapToDto(ticket);
+        }
+
+        public async Task<List<TicketDto>> GetTicketsByStatusAsync(string status)
+        {
+            if (!_allowedTransitions.ContainsKey(status))
+            {
+                throw new ArgumentException($"Invalid status: {status}");
+            }
+
+            var tickets = await _ticketRepository.GetByStatusAsync(status);
+
+            return tickets.Select(t => MapToDto(t)).ToList();
+        }
+
+        public async Task<List<TicketStatusHistoryDto>> GetStatusHistoryAsync(int ticketId)
+        {
+            var history = await _historyRepository.GetByTicketIdAsync(ticketId);
+
+            return history.Select(h => MapToDto(h)).ToList();
+        }
+
+        public async Task<List<TicketAssignmentDto>> GetAssignmentsAsync(int ticketId)
+        {
+            var assignments = await _assignmentRepository.GetByTicketIdAsync(ticketId);
+
+            return assignments.Select(a => MapToDto(a)).ToList();
+        }
+
         private static TicketDto MapToDto(SupportTicket ticket)
         {
             return new TicketDto
@@ -160,6 +193,19 @@ namespace SmartSupport_AI.BLL.Services.Classes.Tickets
                 AgentId = assignment.AgentId,
                 AssignedAt = assignment.AssignedAt,
                 IsCurrent = assignment.IsCurrent
+            };
+        }
+
+        private static TicketStatusHistoryDto MapToDto(TicketStatusHistory history)
+        {
+            return new TicketStatusHistoryDto
+            {
+                HistoryId = history.HistoryId,
+                TicketId = history.TicketId,
+                ChangedByUserId = history.ChangedBy,
+                OldStatus = history.OldStatus,
+                NewStatus = history.NewStatus,
+                ChangedAt = history.ChangedAt
             };
         }
     }
