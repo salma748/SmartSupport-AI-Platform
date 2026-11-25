@@ -34,5 +34,20 @@ namespace SmartSupport_AI.BLL.Services.Classes.KnowledgeBase
                 UpdatedAt = article.UpdatedAt
             };
         }
+
+        public async Task<IReadOnlyList<KnowledgeArticleSummaryDto>> GetByCategoryIdAsync(int categoryId)
+        {
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(categoryId);
+
+            var articles = await _knowledgeArticleRepository.GetByCategoryIdAsync(categoryId);
+            return articles.Select(article => new KnowledgeArticleSummaryDto
+            {
+                ArticleId = article.ArticleId,
+                CategoryId = article.CategoryId,
+                Title = article.Title,
+                Status = article.Status,
+                UpdatedAt = article.UpdatedAt
+            }).ToList();
+        }
     }
 }
