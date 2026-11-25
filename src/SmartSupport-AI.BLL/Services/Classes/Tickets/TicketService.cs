@@ -39,6 +39,8 @@ namespace SmartSupport_AI.BLL.Services.Classes.Tickets
 
         public async Task<TicketDto> CreateTicketAsync(CreateTicketDto dto)
         {
+            ArgumentNullException.ThrowIfNull(dto);
+
             if (!_validPriorities.Contains(dto.Priority))
             {
                 throw new ArgumentException($"Invalid priority: {dto.Priority}");
@@ -62,6 +64,8 @@ namespace SmartSupport_AI.BLL.Services.Classes.Tickets
 
         public async Task<TicketDto> ChangeStatusAsync(ChangeTicketStatusDto dto)
         {
+            ArgumentNullException.ThrowIfNull(dto);
+
             var ticket = await _ticketRepository.GetByIdAsync(dto.TicketId);
 
             if (ticket == null)
@@ -103,6 +107,8 @@ namespace SmartSupport_AI.BLL.Services.Classes.Tickets
 
         public async Task<TicketAssignmentDto> AssignTicketAsync(AssignTicketDto dto)
         {
+            ArgumentNullException.ThrowIfNull(dto);
+
             var ticket = await _ticketRepository.GetByIdAsync(dto.TicketId);
 
             if (ticket == null)
@@ -146,6 +152,8 @@ namespace SmartSupport_AI.BLL.Services.Classes.Tickets
 
         public async Task<List<TicketDto>> GetTicketsByStatusAsync(string status)
         {
+            ArgumentNullException.ThrowIfNull(status);
+
             if (!_allowedTransitions.ContainsKey(status))
             {
                 throw new ArgumentException($"Invalid status: {status}");

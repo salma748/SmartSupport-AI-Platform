@@ -20,6 +20,8 @@ namespace SmartSupport_AI.BLL.Services.Classes.Tickets
 
         public async Task<InternalNoteDto> AddNoteAsync(AddInternalNoteDto dto)
         {
+            ArgumentNullException.ThrowIfNull(dto);
+
             if (string.IsNullOrWhiteSpace(dto.Content))
             {
                 throw new ArgumentException("Note content cannot be empty");
