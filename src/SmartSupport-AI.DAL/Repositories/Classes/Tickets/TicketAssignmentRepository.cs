@@ -25,5 +25,33 @@ namespace SmartSupport_AI.DAL.Repositories.Classes.Tickets
                 .OrderByDescending(a => a.AssignedAt)
                 .ToListAsync();
         }
+        public async Task<TicketAssignment> ReassignAsync(int ticketId, int newAgentId)
+        {
+            await using var transaction = await _context.Database.BeginTransactionAsync();
+
+            var current = await _context.TicketAssignments
+                .FirstOrDefaultAsync(a => a.TicketId == ticketId && a.IsCurrent);
+
+            if (current != null)
+            {
+                current.IsCurrent = false;
+                await _context.SaveChangesAsync();
+            }
+
+            var assignment = new TicketAssignment
+            {
+                TicketId = ticketId,
+                AgentId = newAgentId,
+                AssignedAt = DateTime.UtcNow,
+                IsCurrent = true
+            };
+
+            _context.TicketAssignments.Add(assignment);
+            await _context.SaveChangesAsync();
+
+            await transaction.CommitAsync();
+
+            return assignment;
+        }
     }
 }

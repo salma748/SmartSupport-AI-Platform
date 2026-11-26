@@ -118,27 +118,12 @@ namespace SmartSupport_AI.BLL.Services.Classes.Tickets
 
             var current = await _assignmentRepository.GetCurrentByTicketIdAsync(dto.TicketId);
 
-            if (current != null)
+            if (current != null && current.AgentId == dto.AgentId)
             {
-                if (current.AgentId == dto.AgentId)
-                {
-                    return MapToDto(current);
-                }
-
-                current.IsCurrent = false;
-                await _assignmentRepository.SaveChangesAsync();
+                return MapToDto(current);
             }
 
-            var assignment = new TicketAssignment
-            {
-                TicketId = dto.TicketId,
-                AgentId = dto.AgentId,
-                AssignedAt = DateTime.UtcNow,
-                IsCurrent = true
-            };
-
-            _assignmentRepository.Add(assignment);
-            await _assignmentRepository.SaveChangesAsync();
+            var assignment = await _assignmentRepository.ReassignAsync(dto.TicketId, dto.AgentId);
 
             return MapToDto(assignment);
         }
