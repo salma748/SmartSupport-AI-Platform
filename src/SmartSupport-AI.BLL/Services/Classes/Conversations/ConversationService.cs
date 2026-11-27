@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SmartSupport_AI.BLL.Services.Classes.Conversations
 {
-    //public class ConversationService : IConversationService
-    //{
-    //}
+    public class ConversationService : IConversationService
+    {
+    }
 }
