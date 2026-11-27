@@ -207,6 +207,10 @@ namespace SmartSupport_AI.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<long>("FileSize")
                         .HasColumnType("bigint");
 

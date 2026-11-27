@@ -20,6 +20,8 @@ namespace SmartSupport_AI.DAL.Configurations
                 "CK_Attachment_MessageOrTicket",
                 "[MessageId] IS NOT NULL OR [TicketId] IS NOT NULL"
             ));
+
+            builder.Property(e => e.FilePath).IsRequired();
         }
     }
 }

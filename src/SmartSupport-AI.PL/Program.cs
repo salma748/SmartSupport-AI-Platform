@@ -14,6 +14,7 @@ using SmartSupport_AI.DAL.Repositories.Classes.Conversations;
 using SmartSupport_AI.DAL.Repositories.Interfaces.Conversations;
 using SmartSupport_AI.DAL.Repositories.Classes.KnowledgeBase;
 using SmartSupport_AI.DAL.Repositories.Interfaces.KnowledgeBase;
+using SmartSupport_AI.PL.Services.FileStorage;
 
 namespace SmartSupport_AI.PL
 {
@@ -36,6 +37,7 @@ namespace SmartSupport_AI.PL
             builder.Services.AddScoped<IMessageRepository, MessageRepository>();
             builder.Services.AddScoped<IConversationService, ConversationService>();
             builder.Services.AddScoped<IMessageService, MessageService>();
+            builder.Services.AddScoped<IFileStorageService, LocalFileStorageService>();
 
             // Tickets module
             builder.Services.AddScoped<ISupportTicketRepository, SupportTicketRepository>();

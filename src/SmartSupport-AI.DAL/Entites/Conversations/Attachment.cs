@@ -16,6 +16,8 @@ namespace SmartSupport_AI.DAL.Entites
 
         public string FileType { get; set; } = string.Empty;
 
+        public string FilePath { get; set; } = string.Empty;
+
         public long FileSize { get; set; }
 
         public DateTime UploadedAt { get; set; }
