@@ -1,5 +1,14 @@
 using Microsoft.EntityFrameworkCore;
+using SmartSupport_AI.BLL.Services.Classes.Tickets;
+using SmartSupport_AI.BLL.Services.Interfaces.Tickets;
 using SmartSupport_AI.DAL.Contexts;
+using SmartSupport_AI.DAL.Repositories.Classes.Tickets;
+using SmartSupport_AI.DAL.Repositories.Interfaces.Tickets;
+using SmartSupport_AI.BLL.Services.Classes.Orders;
+using SmartSupport_AI.BLL.Services.Interfaces.Orders;
+using SmartSupport_AI.DAL.Repositories.Classes.Orders;
+using SmartSupport_AI.DAL.Repositories.Interfaces.Orders;
+
 
 namespace SmartSupport_AI.PL
 {
@@ -14,6 +23,24 @@ namespace SmartSupport_AI.PL
 
             builder.Services.AddDbContext<SmartSupportDbContext>(options =>
                 options.UseSqlServer(connectionString));
+
+            // Tickets module
+            builder.Services.AddScoped<ISupportTicketRepository, SupportTicketRepository>();
+            builder.Services.AddScoped<ITicketAssignmentRepository, TicketAssignmentRepository>();
+            builder.Services.AddScoped<IInternalNoteRepository, InternalNoteRepository>();
+            builder.Services.AddScoped<ITicketStatusHistoryRepository, TicketStatusHistoryRepository>();
+
+            builder.Services.AddScoped<ITicketService, TicketService>();
+            builder.Services.AddScoped<IInternalNoteService, InternalNoteService>();
+
+            // Orders module
+            builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+            builder.Services.AddScoped<IOrderStatusCheckRepository, OrderStatusCheckRepository>();
+            builder.Services.AddScoped<IRefundRequestRepository, RefundRequestRepository>();
+            builder.Services.AddScoped<IRefundStatusHistoryRepository, RefundStatusHistoryRepository>();
+
+            builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<IRefundService, RefundService>();
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
