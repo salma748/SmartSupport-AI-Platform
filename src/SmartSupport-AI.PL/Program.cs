@@ -1,19 +1,21 @@
 using Microsoft.EntityFrameworkCore;
+using SmartSupport_AI.BLL.Services.Classes.Conversations;
+using SmartSupport_AI.BLL.Services.Classes.Orders;
 using SmartSupport_AI.BLL.Services.Classes.Tickets;
+using SmartSupport_AI.BLL.Services.Interfaces.Conversations;
+using SmartSupport_AI.BLL.Services.Interfaces.Orders;
 using SmartSupport_AI.BLL.Services.Interfaces.Tickets;
 using SmartSupport_AI.DAL.Contexts;
-using SmartSupport_AI.DAL.Repositories.Classes.Tickets;
-using SmartSupport_AI.DAL.Repositories.Interfaces.Tickets;
-using SmartSupport_AI.BLL.Services.Classes.Orders;
-using SmartSupport_AI.BLL.Services.Interfaces.Orders;
-using SmartSupport_AI.DAL.Repositories.Classes.Orders;
-using SmartSupport_AI.DAL.Repositories.Interfaces.Orders;
-using SmartSupport_AI.BLL.Services.Classes.Conversations;
-using SmartSupport_AI.BLL.Services.Interfaces.Conversations;
+using SmartSupport_AI.DAL.Repositories.Classes;
 using SmartSupport_AI.DAL.Repositories.Classes.Conversations;
-using SmartSupport_AI.DAL.Repositories.Interfaces.Conversations;
 using SmartSupport_AI.DAL.Repositories.Classes.KnowledgeBase;
+using SmartSupport_AI.DAL.Repositories.Classes.Orders;
+using SmartSupport_AI.DAL.Repositories.Classes.Tickets;
+using SmartSupport_AI.DAL.Repositories.Interfaces;
+using SmartSupport_AI.DAL.Repositories.Interfaces.Conversations;
 using SmartSupport_AI.DAL.Repositories.Interfaces.KnowledgeBase;
+using SmartSupport_AI.DAL.Repositories.Interfaces.Orders;
+using SmartSupport_AI.DAL.Repositories.Interfaces.Tickets;
 using SmartSupport_AI.PL.Services.FileStorage;
 
 namespace SmartSupport_AI.PL
@@ -32,12 +34,17 @@ namespace SmartSupport_AI.PL
 
             builder.Services.AddScoped<IAIConfigurationRepository, AIConfigurationRepository>();
 
+            // Generic Repository
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
             // Conversations & Messaging module
             builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
             builder.Services.AddScoped<IMessageRepository, MessageRepository>();
             builder.Services.AddScoped<IConversationService, ConversationService>();
             builder.Services.AddScoped<IMessageService, MessageService>();
             builder.Services.AddScoped<IFileStorageService, LocalFileStorageService>();
+            builder.Services.AddScoped<IAttachmentService, AttachmentService>();
+            builder.Services.AddScoped<IAttachmentRepository, AttachmentRepository>();
 
             // Tickets module
             builder.Services.AddScoped<ISupportTicketRepository, SupportTicketRepository>();

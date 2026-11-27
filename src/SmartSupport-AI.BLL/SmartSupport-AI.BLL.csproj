@@ -11,4 +11,8 @@
     <ProjectReference Include="..\SmartSupport-AI.DAL\SmartSupport-AI.DAL.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
 </Project>
