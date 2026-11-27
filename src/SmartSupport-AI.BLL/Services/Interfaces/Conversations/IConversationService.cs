@@ -9,6 +9,6 @@ namespace SmartSupport_AI.BLL.Services.Interfaces.Conversations
     {
         Task<List<ConversationDto>> GetCustomerConversationsAsync(int customerId);
 
-        Task<ConversationDto?> GetConversationByIdAsync(int conversationId);
+        Task<ConversationDto?> GetConversationByIdAsync(int conversationId, int customerId);
     }
 }

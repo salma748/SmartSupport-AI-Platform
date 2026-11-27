@@ -8,7 +8,10 @@ using SmartSupport_AI.BLL.Services.Classes.Orders;
 using SmartSupport_AI.BLL.Services.Interfaces.Orders;
 using SmartSupport_AI.DAL.Repositories.Classes.Orders;
 using SmartSupport_AI.DAL.Repositories.Interfaces.Orders;
-
+using SmartSupport_AI.BLL.Services.Classes.Conversations;
+using SmartSupport_AI.BLL.Services.Interfaces.Conversations;
+using SmartSupport_AI.DAL.Repositories.Classes.Conversations;
+using SmartSupport_AI.DAL.Repositories.Interfaces.Conversations;
 
 namespace SmartSupport_AI.PL
 {
@@ -23,6 +26,12 @@ namespace SmartSupport_AI.PL
 
             builder.Services.AddDbContext<SmartSupportDbContext>(options =>
                 options.UseSqlServer(connectionString));
+
+            // Conversations & Messaging module
+            builder.Services.AddScoped<IConversationRepository, ConversationRepository>();
+            builder.Services.AddScoped<IMessageRepository, MessageRepository>();
+            builder.Services.AddScoped<IConversationService, ConversationService>();
+            builder.Services.AddScoped<IMessageService, MessageService>();
 
             // Tickets module
             builder.Services.AddScoped<ISupportTicketRepository, SupportTicketRepository>();

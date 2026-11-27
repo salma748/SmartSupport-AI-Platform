@@ -13,7 +13,6 @@ namespace SmartSupport_AI.DAL.Migrations
     [DbContext(typeof(SmartSupportDbContext))]
     partial class SmartSupportDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
@@ -56,6 +55,10 @@ namespace SmartSupport_AI.DAL.Migrations
                     b.HasKey("ConfigId");
 
                     b.HasIndex("CreatedBy");
+
+                    b.HasIndex("IsActive")
+                        .IsUnique()
+                        .HasFilter("[IsActive] = 1");
 
                     b.HasIndex("VersionNumber")
                         .IsUnique();

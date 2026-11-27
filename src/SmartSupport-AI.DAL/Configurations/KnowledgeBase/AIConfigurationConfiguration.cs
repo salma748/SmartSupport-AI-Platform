@@ -22,6 +22,10 @@ namespace SmartSupport_AI.DAL.Configurations
 
             builder.Property(e => e.CreatedAt).IsRequired();
 
+            builder.HasIndex(e => e.IsActive)
+                 .IsUnique()
+                 .HasFilter("[IsActive] = 1");
+
             builder.HasMany<Conversation>()
                 .WithOne(e => e.Configuration)
                 .HasForeignKey(e => e.ConfigId)
