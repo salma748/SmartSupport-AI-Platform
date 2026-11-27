@@ -17,5 +17,12 @@ namespace SmartSupport_AI.DAL.Repositories.Classes.KnowledgeBase
             return await _context.AIConfigurations
                 .FirstOrDefaultAsync(configuration => configuration.VersionNumber == versionNumber);
         }
+
+        public async Task<AIConfiguration?> GetActiveAsync()
+        {
+            return await _context.AIConfigurations
+                .AsNoTracking()
+                .SingleOrDefaultAsync(configuration => configuration.IsActive);
+        }
     }
 }

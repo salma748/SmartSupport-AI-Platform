@@ -20,5 +20,16 @@ namespace SmartSupport_AI.DAL.Repositories.Classes.Conversations
                 .OrderBy(message => message.SequenceNo)
                 .ToListAsync();
         }
+
+        public async Task<List<Message>> GetRecentByConversationIdAsync(int conversationId, int count)
+        {
+            return await _context.Messages
+                .AsNoTracking()
+                .Where(message => message.ConversationId == conversationId)
+                .OrderByDescending(message => message.SequenceNo)
+                .Take(count)
+                .OrderBy(message => message.SequenceNo)
+                .ToListAsync();
+        }
     }
 }

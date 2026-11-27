@@ -17,6 +17,7 @@ namespace SmartSupport_AI.DAL.Entites
         public string? ResolutionType { get; set; }
 
         public string? Summary { get; set; }
+        public int? AgentId { get; set; }
 
         public DateTime StartedAt { get; set; }
 
@@ -25,6 +26,8 @@ namespace SmartSupport_AI.DAL.Entites
         public AIConfiguration Configuration { get; set; } = null!;
 
         public Customer Customer { get; set; } = null!;
+
+        public SupportAgent? Agent { get; set; }
 
         public ICollection<Message> Messages { get; set; } = new List<Message>();
 

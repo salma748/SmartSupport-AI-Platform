@@ -46,6 +46,11 @@ namespace SmartSupport_AI.DAL.Configurations
                 .WithOne(e => e.Conversation)
                 .HasForeignKey(e => e.ConversationId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasOne(e => e.Agent)
+                .WithMany()
+                .HasForeignKey(e => e.AgentId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

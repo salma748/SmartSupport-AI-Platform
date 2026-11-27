@@ -248,6 +248,9 @@ namespace SmartSupport_AI.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ConversationId"));
 
+                    b.Property<int?>("AgentId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Channel")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -275,6 +278,8 @@ namespace SmartSupport_AI.DAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ConversationId");
+
+                    b.HasIndex("AgentId");
 
                     b.HasIndex("ConfigId");
 
@@ -1041,6 +1046,11 @@ namespace SmartSupport_AI.DAL.Migrations
 
             modelBuilder.Entity("SmartSupport_AI.DAL.Entites.Conversation", b =>
                 {
+                    b.HasOne("SmartSupport_AI.DAL.Entites.SupportAgent", "Agent")
+                        .WithMany()
+                        .HasForeignKey("AgentId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("SmartSupport_AI.DAL.Entites.AIConfiguration", "Configuration")
                         .WithMany()
                         .HasForeignKey("ConfigId")
@@ -1052,6 +1062,8 @@ namespace SmartSupport_AI.DAL.Migrations
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("Agent");
 
                     b.Navigation("Configuration");
 

@@ -12,6 +12,8 @@ using SmartSupport_AI.BLL.Services.Classes.Conversations;
 using SmartSupport_AI.BLL.Services.Interfaces.Conversations;
 using SmartSupport_AI.DAL.Repositories.Classes.Conversations;
 using SmartSupport_AI.DAL.Repositories.Interfaces.Conversations;
+using SmartSupport_AI.DAL.Repositories.Classes.KnowledgeBase;
+using SmartSupport_AI.DAL.Repositories.Interfaces.KnowledgeBase;
 
 namespace SmartSupport_AI.PL
 {
@@ -26,6 +28,8 @@ namespace SmartSupport_AI.PL
 
             builder.Services.AddDbContext<SmartSupportDbContext>(options =>
                 options.UseSqlServer(connectionString));
+
+            builder.Services.AddScoped<IAIConfigurationRepository, AIConfigurationRepository>();
 
             // Conversations & Messaging module
             builder.Services.AddScoped<IConversationRepository, ConversationRepository>();

@@ -5,5 +5,7 @@ namespace SmartSupport_AI.DAL.Repositories.Interfaces.Conversations
     public interface IMessageRepository : IGenericRepository<Message>
     {
         Task<List<Message>> GetByConversationIdAsync(int conversationId);
+
+        Task<List<Message>> GetRecentByConversationIdAsync(int conversationId, int count);
     }
 }

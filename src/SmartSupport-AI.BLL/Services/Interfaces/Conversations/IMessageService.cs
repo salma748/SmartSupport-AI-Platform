@@ -9,6 +9,12 @@ namespace SmartSupport_AI.BLL.Services.Interfaces.Conversations
     {
         Task<List<MessageDto>?> GetConversationMessagesAsync(int conversationId,int customerId);
 
-        Task<MessageDto?> SendMessageAsync(int customerId, SendMessageDto messageDto);
+        Task<MessageDto?> SendMessageAsync(int customerId, SendMessageDto messageDto); //for user
+
+        Task<MessageDto?> SaveAIMessageAsync(int conversationId, string content);
+
+        Task<MessageDto?> SaveAgentMessageAsync(int conversationId, int agentId, string content);
+
+        Task<List<MessageDto>?> GetRecentMessagesAsync(int conversationId, int customerId, int count);
     }
 }
